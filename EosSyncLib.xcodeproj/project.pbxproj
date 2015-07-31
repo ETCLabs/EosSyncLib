@@ -1,0 +1,284 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		971B72441AA808C900BD59DA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971B72431AA808C900BD59DA /* main.cpp */; };
+		971B72561AA8094800BD59DA /* EosLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971B724A1AA8094800BD59DA /* EosLog.cpp */; };
+		971B72571AA8094800BD59DA /* EosOsc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971B724C1AA8094800BD59DA /* EosOsc.cpp */; };
+		971B72581AA8094800BD59DA /* EosSyncLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971B724E1AA8094800BD59DA /* EosSyncLib.cpp */; };
+		971B72591AA8094800BD59DA /* EosTcp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971B72501AA8094800BD59DA /* EosTcp.cpp */; };
+		971B725A1AA8094800BD59DA /* EosTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971B72521AA8094800BD59DA /* EosTimer.cpp */; };
+		971B725B1AA8094800BD59DA /* OSCParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971B72541AA8094800BD59DA /* OSCParser.cpp */; };
+		971B725E1AA80B2500BD59DA /* EosTcp_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971B725C1AA80B2500BD59DA /* EosTcp_Mac.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		971B723E1AA808C900BD59DA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		971B72401AA808C900BD59DA /* EosSyncLib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EosSyncLib; sourceTree = BUILT_PRODUCTS_DIR; };
+		971B72431AA808C900BD59DA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		971B724A1AA8094800BD59DA /* EosLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EosLog.cpp; sourceTree = "<group>"; };
+		971B724B1AA8094800BD59DA /* EosLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EosLog.h; sourceTree = "<group>"; };
+		971B724C1AA8094800BD59DA /* EosOsc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EosOsc.cpp; sourceTree = "<group>"; };
+		971B724D1AA8094800BD59DA /* EosOsc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EosOsc.h; sourceTree = "<group>"; };
+		971B724E1AA8094800BD59DA /* EosSyncLib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EosSyncLib.cpp; sourceTree = "<group>"; };
+		971B724F1AA8094800BD59DA /* EosSyncLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EosSyncLib.h; sourceTree = "<group>"; };
+		971B72501AA8094800BD59DA /* EosTcp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EosTcp.cpp; sourceTree = "<group>"; };
+		971B72511AA8094800BD59DA /* EosTcp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EosTcp.h; sourceTree = "<group>"; };
+		971B72521AA8094800BD59DA /* EosTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EosTimer.cpp; sourceTree = "<group>"; };
+		971B72531AA8094800BD59DA /* EosTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EosTimer.h; sourceTree = "<group>"; };
+		971B72541AA8094800BD59DA /* OSCParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OSCParser.cpp; sourceTree = "<group>"; };
+		971B72551AA8094800BD59DA /* OSCParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCParser.h; sourceTree = "<group>"; };
+		971B725C1AA80B2500BD59DA /* EosTcp_Mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EosTcp_Mac.cpp; sourceTree = "<group>"; };
+		971B725D1AA80B2500BD59DA /* EosTcp_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EosTcp_Mac.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		971B723D1AA808C900BD59DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		971B72371AA808C800BD59DA = {
+			isa = PBXGroup;
+			children = (
+				971B72421AA808C900BD59DA /* EosSyncLib */,
+				971B72411AA808C900BD59DA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		971B72411AA808C900BD59DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				971B72401AA808C900BD59DA /* EosSyncLib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		971B72421AA808C900BD59DA /* EosSyncLib */ = {
+			isa = PBXGroup;
+			children = (
+				971B724A1AA8094800BD59DA /* EosLog.cpp */,
+				971B724B1AA8094800BD59DA /* EosLog.h */,
+				971B724C1AA8094800BD59DA /* EosOsc.cpp */,
+				971B724D1AA8094800BD59DA /* EosOsc.h */,
+				971B724E1AA8094800BD59DA /* EosSyncLib.cpp */,
+				971B724F1AA8094800BD59DA /* EosSyncLib.h */,
+				971B725C1AA80B2500BD59DA /* EosTcp_Mac.cpp */,
+				971B725D1AA80B2500BD59DA /* EosTcp_Mac.h */,
+				971B72501AA8094800BD59DA /* EosTcp.cpp */,
+				971B72511AA8094800BD59DA /* EosTcp.h */,
+				971B72521AA8094800BD59DA /* EosTimer.cpp */,
+				971B72531AA8094800BD59DA /* EosTimer.h */,
+				971B72431AA808C900BD59DA /* main.cpp */,
+				971B72541AA8094800BD59DA /* OSCParser.cpp */,
+				971B72551AA8094800BD59DA /* OSCParser.h */,
+			);
+			path = EosSyncLib;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		971B723F1AA808C900BD59DA /* EosSyncLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 971B72471AA808C900BD59DA /* Build configuration list for PBXNativeTarget "EosSyncLib" */;
+			buildPhases = (
+				971B723C1AA808C900BD59DA /* Sources */,
+				971B723D1AA808C900BD59DA /* Frameworks */,
+				971B723E1AA808C900BD59DA /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EosSyncLib;
+			productName = EosSyncLib;
+			productReference = 971B72401AA808C900BD59DA /* EosSyncLib */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		971B72381AA808C800BD59DA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Electronic Theatre Controls, Inc.";
+				TargetAttributes = {
+					971B723F1AA808C900BD59DA = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 971B723B1AA808C800BD59DA /* Build configuration list for PBXProject "EosSyncLib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 971B72371AA808C800BD59DA;
+			productRefGroup = 971B72411AA808C900BD59DA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				971B723F1AA808C900BD59DA /* EosSyncLib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		971B723C1AA808C900BD59DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				971B72571AA8094800BD59DA /* EosOsc.cpp in Sources */,
+				971B72561AA8094800BD59DA /* EosLog.cpp in Sources */,
+				971B72591AA8094800BD59DA /* EosTcp.cpp in Sources */,
+				971B725B1AA8094800BD59DA /* OSCParser.cpp in Sources */,
+				971B72581AA8094800BD59DA /* EosSyncLib.cpp in Sources */,
+				971B725E1AA80B2500BD59DA /* EosTcp_Mac.cpp in Sources */,
+				971B72441AA808C900BD59DA /* main.cpp in Sources */,
+				971B725A1AA8094800BD59DA /* EosTimer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		971B72451AA808C900BD59DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		971B72461AA808C900BD59DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		971B72481AA808C900BD59DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		971B72491AA808C900BD59DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		971B723B1AA808C800BD59DA /* Build configuration list for PBXProject "EosSyncLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				971B72451AA808C900BD59DA /* Debug */,
+				971B72461AA808C900BD59DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		971B72471AA808C900BD59DA /* Build configuration list for PBXNativeTarget "EosSyncLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				971B72481AA808C900BD59DA /* Debug */,
+				971B72491AA808C900BD59DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 971B72381AA808C800BD59DA /* Project object */;
+}
