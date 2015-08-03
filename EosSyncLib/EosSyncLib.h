@@ -89,7 +89,8 @@ public:
 		EOS_TARGET_PIXMAP,
 		EOS_TARGET_MS,
 
-		EOS_TARGET_COUNT
+		EOS_TARGET_COUNT,
+		EOS_TARGET_INVALID
 	};
 
 	struct sDecimalNumber
@@ -205,6 +206,8 @@ public:
 	virtual const sInitialSyncInfo& GetInitialSync() const {return m_InitialSync;}
 	virtual void InitializeAsDummy();
 
+	static const EosTargetList	sm_InvalidTargetList;
+
 private:
 	const EosTarget::EnumEosTargetType	m_Type;
 	const int							m_ListId;
@@ -236,6 +239,7 @@ public:
 	virtual void Tick(EosTcp &tcp, EosOsc &osc, EosLog &log);
 	virtual const EosSyncStatus& GetStatus() const {return m_Status;}
 	virtual const SHOW_DATA& GetShowData() const {return m_ShowData;}
+	virtual const EosTargetList* GetTargetList(EosTarget::EnumEosTargetType type, int listId) const;
 	virtual void ClearDirty();
 
 private:
@@ -268,10 +272,30 @@ public:
 	virtual void Tick();
 	virtual bool IsRunning() const;
 	virtual bool IsConnected() const;
+	virtual bool IsSynchronized() const;
+	virtual bool IsConnectedAndSynchronized() const {return (IsConnected() && IsSynchronized());}
 	virtual EosLog& GetLog() {return m_Log;}
 	virtual const EosSyncData& GetData() const {return m_Data;}
 	virtual void ClearDirty() { m_Data.ClearDirty(); }
 	virtual bool Send(OSCPacketWriter &packet, bool immediate);
+
+	// convenience
+	virtual const EosTargetList& GetPatch() const;
+	virtual const EosTargetList& GetCueList() const;
+	virtual const EosTargetList& GetCue(int listId) const;
+	virtual const EosTargetList& GetGroups() const;
+	virtual const EosTargetList& GetMacros() const;
+	virtual const EosTargetList& GetSubs() const;
+	virtual const EosTargetList& GetPresets() const;
+	virtual const EosTargetList& GetIntensityPalettes() const;
+	virtual const EosTargetList& GetFocusPalettes() const;
+	virtual const EosTargetList& GetColorPalettes() const;
+	virtual const EosTargetList& GetBeamPalettes() const;
+	virtual const EosTargetList& GetCurves() const;
+	virtual const EosTargetList& GetEffects() const;
+	virtual const EosTargetList& GetSnapshots() const;
+	virtual const EosTargetList& GetPixelMaps() const;
+	virtual const EosTargetList& GetMagicSheets() const;
 
 protected:
 	EosLog		m_Log;

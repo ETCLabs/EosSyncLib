@@ -592,6 +592,10 @@ void EosTarget::GetStringFromNumber(const sDecimalNumber &num, std::string &str)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const EosTargetList	EosTargetList::sm_InvalidTargetList(EosTarget::EOS_TARGET_INVALID, 0);
+
+////////////////////////////////////////////////////////////////////////////////
+
 EosTargetList::EosTargetList(EosTarget::EnumEosTargetType type, int listId)
 	: m_Type(type)
 	, m_ListId(listId)
@@ -1190,6 +1194,22 @@ void EosSyncData::Initialize()
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const EosTargetList* EosSyncData::GetTargetList(EosTarget::EnumEosTargetType type, int listId) const
+{
+	SHOW_DATA::const_iterator i = m_ShowData.find(type);
+	if(i != m_ShowData.end())
+	{
+		const TARGETLIST_DATA &lists = i->second;
+		TARGETLIST_DATA::const_iterator j = lists.find(listId);
+		if(j != lists.end())
+			return j->second;
+	}
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void EosSyncData::TickRunning(EosTcp &tcp, EosOsc &osc, EosLog &log)
 {
 	bool allShowDataComplete = true;
@@ -1520,6 +1540,13 @@ bool EosSyncLib::IsConnected() const
 
 ////////////////////////////////////////////////////////////////////////////////
 
+bool EosSyncLib::IsSynchronized() const
+{
+	return (m_Data.GetStatus().GetValue() == EosSyncStatus::SYNC_STATUS_COMPLETE);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void EosSyncLib::Tick()
 {
 	bool wasConnected = IsConnected();
@@ -1545,6 +1572,134 @@ void EosSyncLib::Tick()
 bool EosSyncLib::Send(OSCPacketWriter &packet, bool immediate)
 {
 	return (IsConnected() && m_Osc->Send(*m_Tcp,packet,immediate));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetPatch() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_PATCH, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetCueList() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_CUELIST, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetCue(int listId) const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_CUE, listId);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetGroups() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_GROUP, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetMacros() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_MACRO, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetSubs() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_SUB, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetPresets() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_PRESET, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetIntensityPalettes() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_IP, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetFocusPalettes() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_FP, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetColorPalettes() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_CP, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetBeamPalettes() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_BP, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetCurves() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_CURVE, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetEffects() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_FX, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetSnapshots() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_SNAP, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetPixelMaps() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_PIXMAP, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const EosTargetList& EosSyncLib::GetMagicSheets() const
+{
+	const EosTargetList *list = m_Data.GetTargetList(EosTarget::EOS_TARGET_MS, /*listId*/0);
+	return (list ? (*list) : EosTargetList::sm_InvalidTargetList);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
