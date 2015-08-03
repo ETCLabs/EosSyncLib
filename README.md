@@ -1,6 +1,10 @@
 # EosSyncLib
 A C++ library (with no 3rd party dependencies) for accessing Eos show data in real time
 
+[Eos Integration via OSC.pdf](https://github.com/ElectronicTheatreControlsLabs/EosSyncLib/raw/master/Eos%20Integration%20via%20OSC.pdf)
+
+[EosFamily_ShowControl_UserGuide_RevB](http://www.etcconnect.com/WorkArea/DownloadAsset.aspx?id=10737461372)
+
 #Simple Example
 ```C++
 #include "EosSyncLib.h"
