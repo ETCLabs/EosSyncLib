@@ -346,7 +346,11 @@ bool EosTcp_Mac::SetSocketBlocking(EosLog &log, const std::string &logPrefix, in
 		else
 		{
 			flags = (b ? (flags&~O_NONBLOCK) : (flags|O_NONBLOCK));
-			if(fcntl(socket,F_SETFL,flags) == -1)
+			if(fcntl(socket,F_SETFL,flags) != -1)
+			{
+				return true;
+			}
+			else
 			{
 				char text[256];
 				sprintf(text, "%s fnctl(set) failed with error %d", GetLogPrefix(logPrefix), errno);
@@ -360,6 +364,8 @@ bool EosTcp_Mac::SetSocketBlocking(EosLog &log, const std::string &logPrefix, in
 		sprintf(text, "%s setblocking(%s) failed, not initialized", GetLogPrefix(logPrefix), b?"true":"false");
 		log.AddWarning(text);
 	}
+	
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
