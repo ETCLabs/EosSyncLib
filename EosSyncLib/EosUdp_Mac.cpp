@@ -134,9 +134,8 @@ const char* EosUdpIn_Mac::RecvPacket(EosLog &log, unsigned int timeoutMS, unsign
 			int result = select(m_Socket+1, &readfds, 0, 0, &timeout);
 			if(result > 0)
 			{
-				socklen_t fromSize = 0;
-				len = recvfrom(m_Socket, m_RecvBuf, EOS_UDP_RECV_BUF_LEN, 0, static_cast<sockaddr*>(addr), &fromSize);
-				*addrSize = static_cast<int>(fromSize);
+				socklen_t fromSize = (addrSize ? static_cast<socklen_t>(*addrSize) : 0);
+				len = recvfrom(m_Socket, m_RecvBuf, EOS_UDP_RECV_BUF_LEN, 0, static_cast<sockaddr*>(addr), (addr && addrSize) ? (&fromSize) : 0);
 				if(len == -1)
 				{
 					char text[256];
