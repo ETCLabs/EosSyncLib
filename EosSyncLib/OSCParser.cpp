@@ -45,8 +45,8 @@ const char OSCParser::OSC_LIST_TAG[] = {'l','i','s','t',0};
 class OSCCompileTimeChecks
 {
 	OSC_COMPILE_TIME_ASSERT(osc_size_check_char8,	sizeof(char)==1);
-	OSC_COMPILE_TIME_ASSERT(osc_size_check_int32,	sizeof(long)==4);
-	OSC_COMPILE_TIME_ASSERT(osc_size_check_int64,	sizeof(long long)==8);
+	OSC_COMPILE_TIME_ASSERT(osc_size_check_int32,	sizeof(int32_t)==4);
+	OSC_COMPILE_TIME_ASSERT(osc_size_check_int64,	sizeof(int64_t)==8);
 	OSC_COMPILE_TIME_ASSERT(osc_size_check_float32,	sizeof(float)==4);
 	OSC_COMPILE_TIME_ASSERT(osc_size_check_float64,	sizeof(double)==8);
 	OSC_COMPILE_TIME_ASSERT(osc_alignment_check,	sizeof(OSCParser::OSC_BUNDLE_PREFIX)==8);
@@ -154,7 +154,7 @@ char* OSCStream::GetNextFrame(size_t &size)
 
 char* OSCStream::GetNextFrame_Mode_1_0(size_t &size)
 {
-	long packetSizeHeader = 0;
+	int32_t packetSizeHeader = 0;
 	if(m_Buf && m_Size>=sizeof(packetSizeHeader))
 	{
 		memcpy(&packetSizeHeader, m_Buf, sizeof(packetSizeHeader));
@@ -278,7 +278,7 @@ char* OSCStream::CreateFrame_Mode_1_0(const char *buf, size_t &size)
 {
 	if(buf && size!=0 && size<=MAX_FRAME_SIZE)
 	{
-		long packetSizeHeader = static_cast<long>(size);
+		int32_t packetSizeHeader = static_cast<int32_t>(size);
 		size += sizeof(packetSizeHeader);
 		char *frame = new char[size];
 		memcpy(frame, &packetSizeHeader, sizeof(packetSizeHeader));
@@ -448,7 +448,7 @@ bool OSCArgument::Init(EnumArgumentTypes type, char *buf, size_t size)
 				if(size >= 4)
 				{
 					size_t dataBytes = static_cast<size_t>( GetInt32FromBuf(buf) );
-					m_Size = (sizeof(long) + Get32BitAlignedSize(dataBytes));
+					m_Size = (sizeof(int32_t) + Get32BitAlignedSize(dataBytes));
 					return true;
 				}
 			}
@@ -683,13 +683,13 @@ bool OSCArgument::GetUInt(unsigned int &n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool OSCArgument::GetInt64(long long &n) const
+bool OSCArgument::GetInt64(int64_t &n) const
 {
 	switch( m_Type )
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
-			n = static_cast<long long>( GetInt32FromBuf(m_pBuf) );
+			n = static_cast<int64_t>( GetInt32FromBuf(m_pBuf) );
 			return true;
 
 		case OSC_TYPE_INT64:
@@ -732,7 +732,7 @@ bool OSCArgument::GetInt64(long long &n) const
 			return true;
 
 		case OSC_TYPE_INFINITY:
-			n = LLONG_MAX;
+			n = INT64_MAX;
 			return true;
 	}
 
@@ -741,13 +741,13 @@ bool OSCArgument::GetInt64(long long &n) const
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool OSCArgument::GetUInt64(unsigned long long &n) const
+bool OSCArgument::GetUInt64(uint64_t &n) const
 {
 	switch( m_Type )
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
-			n = static_cast<unsigned long long>( GetUInt32FromBuf(m_pBuf) );
+			n = static_cast<uint64_t>( GetUInt32FromBuf(m_pBuf) );
 			return true;
 
 		case OSC_TYPE_INT64:
@@ -755,11 +755,11 @@ bool OSCArgument::GetUInt64(unsigned long long &n) const
 			return true;
 
 		case OSC_TYPE_FLOAT32:
-			n = static_cast<unsigned long long>( OSC_ROUNDF64(GetFloat32FromBuf(m_pBuf)) );
+			n = static_cast<uint64_t>( OSC_ROUNDF64(GetFloat32FromBuf(m_pBuf)) );
 			return true;
 
 		case OSC_TYPE_FLOAT64:
-			n = static_cast<unsigned long long>( OSC_ROUND64(GetFloat64FromBuf(m_pBuf)) );
+			n = static_cast<uint64_t>( OSC_ROUND64(GetFloat64FromBuf(m_pBuf)) );
 			return true;
 
 		case OSC_TYPE_STRING:
@@ -768,12 +768,12 @@ bool OSCArgument::GetUInt64(unsigned long long &n) const
 				{
 					if( IsIntString(m_pBuf) )
 					{
-						n = static_cast<unsigned long long>( atoll(m_pBuf) );
+						n = static_cast<uint64_t>( atoll(m_pBuf) );
 						return true;
 					}
 					else if( IsFloatString(m_pBuf) )
 					{
-						n = static_cast<unsigned long long>( OSC_ROUND64(atof(m_pBuf)) );
+						n = static_cast<uint64_t>( OSC_ROUND64(atof(m_pBuf)) );
 						return true;
 					}
 				}
@@ -790,7 +790,7 @@ bool OSCArgument::GetUInt64(unsigned long long &n) const
 			return true;
 
 		case OSC_TYPE_INFINITY:
-			n = ULLONG_MAX;
+			n = UINT64_MAX;
 			return true;
 	}
 
@@ -1082,10 +1082,10 @@ void OSCArgument::Swap32(void *buf)
 {
 #ifndef __BIG_ENDIAN__
 	unsigned char *p = reinterpret_cast<unsigned char*>(buf);
-	unsigned long ul =	(static_cast<unsigned long>(p[3]) |
-						(static_cast<unsigned long>(p[2]) << 8) |
-						(static_cast<unsigned long>(p[1]) << 16) |
-						(static_cast<unsigned long>(p[0]) << 24));
+	uint32_t ul =(static_cast<uint32_t>(p[3]) |
+			(static_cast<uint32_t>(p[2]) << 8) |
+			(static_cast<uint32_t>(p[1]) << 16) |
+			(static_cast<uint32_t>(p[0]) << 24));
 	memcpy(buf, &ul, sizeof(ul));
 #endif
 }
@@ -1096,14 +1096,14 @@ void OSCArgument::Swap64(void *buf)
 {
 #ifndef __BIG_ENDIAN__
 	unsigned char *p = reinterpret_cast<unsigned char*>(buf);
-	unsigned long long ull =	(static_cast<unsigned long long>(p[7]) |
-								(static_cast<unsigned long long>(p[6]) << 8) |
-								(static_cast<unsigned long long>(p[5]) << 16) |
-								(static_cast<unsigned long long>(p[4]) << 24) |
-								(static_cast<unsigned long long>(p[3]) << 32) |
-								(static_cast<unsigned long long>(p[2]) << 40) |
-								(static_cast<unsigned long long>(p[1]) << 48) |
-								(static_cast<unsigned long long>(p[0]) << 56));
+	uint64_t ull =	(static_cast<uint64_t>(p[7]) |
+			(static_cast<uint64_t>(p[6]) << 8) |
+			(static_cast<uint64_t>(p[5]) << 16) |
+			(static_cast<uint64_t>(p[4]) << 24) |
+			(static_cast<uint64_t>(p[3]) << 32) |
+			(static_cast<uint64_t>(p[2]) << 40) |
+			(static_cast<uint64_t>(p[1]) << 48) |
+			(static_cast<uint64_t>(p[0]) << 56));
 	memcpy(buf, &ull, sizeof(ull));
 #endif
 }
@@ -1237,9 +1237,9 @@ bool OSCArgument::IsFloatString(const char *buf)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-long OSCArgument::GetInt32FromBuf(const char *buf)
+int32_t OSCArgument::GetInt32FromBuf(const char *buf)
 {
-	long l;
+	int32_t l;
 	memcpy(&l, buf, sizeof(l));
 	Swap32(&l);
 	return l;
@@ -1247,9 +1247,9 @@ long OSCArgument::GetInt32FromBuf(const char *buf)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-unsigned long OSCArgument::GetUInt32FromBuf(const char *buf)
+uint32_t OSCArgument::GetUInt32FromBuf(const char *buf)
 {
-	unsigned long l;
+	uint32_t l;
 	memcpy(&l, buf, sizeof(l));
 	Swap32(&l);
 	return l;
@@ -1257,9 +1257,9 @@ unsigned long OSCArgument::GetUInt32FromBuf(const char *buf)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-long long OSCArgument::GetInt64FromBuf(const char *buf)
+int64_t OSCArgument::GetInt64FromBuf(const char *buf)
 {
-	long long ll;
+	int64_t ll;
 	memcpy(&ll, buf, sizeof(ll));
 	Swap64(&ll);
 	return ll;
@@ -1267,9 +1267,9 @@ long long OSCArgument::GetInt64FromBuf(const char *buf)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-unsigned long long OSCArgument::GetUInt64FromBuf(const char *buf)
+uint64_t OSCArgument::GetUInt64FromBuf(const char *buf)
 {
-	unsigned long long ll;
+	uint64_t ll;
 	memcpy(&ll, buf, sizeof(ll));
 	Swap64(&ll);
 	return ll;
@@ -1561,7 +1561,7 @@ void OSCPacketWriter::AddChar(char c)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OSCPacketWriter::AddInt32(long n)
+void OSCPacketWriter::AddInt32(int32_t n)
 {
 	sArgInfo *arg = new sArgInfo;
 	arg->type = OSCArgument::OSC_TYPE_INT32;
@@ -1572,18 +1572,18 @@ void OSCPacketWriter::AddInt32(long n)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OSCPacketWriter::AddUInt32(unsigned long n)
+void OSCPacketWriter::AddUInt32(uint32_t n)
 {
 	sArgInfo *arg = new sArgInfo;
 	arg->type = OSCArgument::OSC_TYPE_INT32;
-	arg->data.int32Data = static_cast<long>(n);
+	arg->data.int32Data = static_cast<int32_t>(n);
 	arg->size = 4;
 	m_Q.push_back(arg);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OSCPacketWriter::AddInt64(const long long &n)
+void OSCPacketWriter::AddInt64(const int64_t &n)
 {
 	sArgInfo *arg = new sArgInfo;
 	arg->type = OSCArgument::OSC_TYPE_INT64;
@@ -1594,11 +1594,11 @@ void OSCPacketWriter::AddInt64(const long long &n)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OSCPacketWriter::AddUInt64(const unsigned long long &n)
+void OSCPacketWriter::AddUInt64(const uint64_t &n)
 {
 	sArgInfo *arg = new sArgInfo;
 	arg->type = OSCArgument::OSC_TYPE_INT64;
-	arg->data.int64Data = static_cast<long long>(n);
+	arg->data.int64Data = static_cast<int64_t>(n);
 	arg->size = 8;
 	m_Q.push_back(arg);
 }
@@ -1645,7 +1645,7 @@ void OSCPacketWriter::AddString(const std::string &str)
 
 void OSCPacketWriter::AddBlob(const char *data, size_t size)
 {
-	long bytes = static_cast<long>(size);
+	int32_t bytes = static_cast<int32_t>(size);
 	if(bytes >= 0)
 	{
 		sArgInfo *arg = new sArgInfo;
@@ -1710,7 +1710,7 @@ void OSCPacketWriter::AddInfinity()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OSCPacketWriter::AddMidi(long n)
+void OSCPacketWriter::AddMidi(int32_t n)
 {
 	sArgInfo *arg = new sArgInfo;
 	arg->type = OSCArgument::OSC_TYPE_MIDI;
@@ -1721,7 +1721,7 @@ void OSCPacketWriter::AddMidi(long n)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OSCPacketWriter::AddTime(const long long &n)
+void OSCPacketWriter::AddTime(const int64_t &n)
 {
 	sArgInfo *arg = new sArgInfo;
 	arg->type = OSCArgument::OSC_TYPE_TIME;
@@ -1748,13 +1748,13 @@ void OSCPacketWriter::AddOSCArg(const OSCArgument &arg)
 			{
 				int n;
 				if( arg.GetInt(n) )
-					AddInt32( static_cast<long>(n) );
+					AddInt32( static_cast<int32_t>(n) );
 			}
 			break;
 
 		case OSCArgument::OSC_TYPE_INT64:
 			{
-				long long n;
+				int64_t n;
 				if( arg.GetInt64(n) )
 					AddInt64(n);
 			}
@@ -1790,7 +1790,7 @@ void OSCPacketWriter::AddOSCArg(const OSCArgument &arg)
 
 		case OSCArgument::OSC_TYPE_TIME:
 			{
-				long long n;
+				int64_t n;
 				if( arg.GetInt64(n) )
 					AddTime(n);
 			}
@@ -1808,7 +1808,7 @@ void OSCPacketWriter::AddOSCArg(const OSCArgument &arg)
 			{
 				int n;
 				if( arg.GetInt(n) )
-					AddMidi( static_cast<long>(n) );
+					AddMidi( static_cast<int32_t>(n) );
 			}
 			break;
 
@@ -2147,7 +2147,7 @@ bool OSCBundleWriter::Write(char *buf, size_t size) const
 						return false;
 
 					// element size
-					long l = static_cast<long>(packetSize);
+					int32_t l = static_cast<int32_t>(packetSize);
 					memcpy(buf, &l, 4);
 					OSCArgument::Swap32(buf);
 					buf += 4;

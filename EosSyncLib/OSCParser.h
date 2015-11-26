@@ -44,8 +44,8 @@
 
 #define OSC_ROUND(x)		((x>=0)?static_cast<int>(x+0.5):static_cast<int>(x-0.5))
 #define OSC_ROUNDF(x)		((x>=0)?static_cast<int>(x+0.5f):static_cast<int>(x-0.5f))
-#define OSC_ROUND64(x)		((x>=0)?static_cast<long long>(x+0.5):static_cast<long long>(x-0.5))
-#define OSC_ROUNDF64(x)		((x>=0)?static_cast<long long>(x+0.5f):static_cast<long long>(x-0.5f))
+#define OSC_ROUND64(x)		((x>=0)?static_cast<int64_t>(x+0.5):static_cast<int64_t>(x-0.5))
+#define OSC_ROUNDF64(x)		((x>=0)?static_cast<int64_t>(x+0.5f):static_cast<int64_t>(x-0.5f))
 #define OSC_IS_ABOUT(x,y)	(fabs(x-y)<0.00001)
 #define OSC_IS_ABOUTF(x,y)	(fabsf(x-y)<0.00001f)
 
@@ -152,8 +152,8 @@ public:
 	bool GetDouble(double &d) const;
 	bool GetInt(int &n) const;
 	bool GetUInt(unsigned int &n) const;
-	bool GetInt64(long long &n) const;
-	bool GetUInt64(unsigned long long &n) const;
+	bool GetInt64(int64_t &n) const;
+	bool GetUInt64(uint64_t &n) const;
 	bool GetRGBA(sRGBA &rgba) const;
 	bool GetString(std::string &str) const;
 	bool GetBool(bool &b) const;
@@ -168,10 +168,10 @@ public:
 	static const char* GetSafeString(const char*buf, size_t size);
 	static bool IsIntString(const char *buf);
 	static bool IsFloatString(const char *buf);
-	static long GetInt32FromBuf(const char *buf);
-	static unsigned long GetUInt32FromBuf(const char *buf);
-	static long long GetInt64FromBuf(const char *buf);
-	static unsigned long long GetUInt64FromBuf(const char *buf);
+	static int32_t GetInt32FromBuf(const char *buf);
+	static uint32_t GetUInt32FromBuf(const char *buf);
+	static int64_t GetInt64FromBuf(const char *buf);
+	static uint64_t GetUInt64FromBuf(const char *buf);
 	static float GetFloat32FromBuf(const char *buf);
 	static double GetFloat64FromBuf(const char *buf);
 
@@ -211,10 +211,10 @@ public:
 
 	virtual void AddBool(bool b);
 	virtual void AddChar(char c);
-	virtual void AddInt32(long n);
-	virtual void AddUInt32(unsigned long n);
-	virtual void AddInt64(const long long &n);
-	virtual void AddUInt64(const unsigned long long &n);
+	virtual void AddInt32(int32_t n);
+	virtual void AddUInt32(uint32_t n);
+	virtual void AddInt64(const int64_t &n);
+	virtual void AddUInt64(const uint64_t &n);
 	virtual void AddFloat32(float f);
 	virtual void AddFloat64(const double &d);
 	virtual void AddRGBA(const OSCArgument::sRGBA &rgba);
@@ -224,8 +224,8 @@ public:
 	virtual void AddFalse();
 	virtual void AddNull();
 	virtual void AddInfinity();
-	virtual void AddMidi(long n);
-	virtual void AddTime(const long long &n);
+	virtual void AddMidi(int32_t n);
+	virtual void AddTime(const int64_t &n);
 	virtual void AddOSCArg(const OSCArgument &arg);
 	virtual void AddOSCArgList(const OSCArgument *args, size_t count);
 
@@ -249,8 +249,8 @@ protected:
 	union uArgData
 	{
 		char*		binaryData;
-		long		int32Data;
-		long long	int64Data;
+		int32_t		int32Data;
+		int64_t	int64Data;
 		float		float32Data;
 		double		float64Data;
 	};
