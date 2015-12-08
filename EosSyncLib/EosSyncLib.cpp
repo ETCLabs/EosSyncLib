@@ -574,7 +574,7 @@ void EosTarget::GetStringFromNumber(const sDecimalNumber &num, std::string &str)
 			strcat(fmt, "d");
 			sprintf(buf, fmt, n);
 			// chop trailing zeroes
-			for(int i=(strlen(buf)-1); i>=0; i--)
+			for(int i=(static_cast<int>(strlen(buf))-1); i>=0; i--)
 			{
 				if(buf[i] == '0')
 					buf[i] = 0;
