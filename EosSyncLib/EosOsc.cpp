@@ -154,7 +154,7 @@ void EosOsc::Recv(EosTcp &tcp, unsigned int timeoutMS, CMD_Q &cmdQ)
 		}
 
 		// do we have a complete osc packet?
-		long oscPacketLen = 0;
+		int32_t oscPacketLen = 0;
 		while(m_InputBuffer.data && m_InputBuffer.size>=sizeof(oscPacketLen))
 		{
 			memcpy(&oscPacketLen, m_InputBuffer.data, sizeof(oscPacketLen));
@@ -179,7 +179,7 @@ void EosOsc::Recv(EosTcp &tcp, unsigned int timeoutMS, CMD_Q &cmdQ)
 				memcpy(cmd->buf, oscData, oscPacketLen);
 
 				// find osc path null terminator
-				for(long i=0; i<oscPacketLen; i++)
+				for(int32_t i=0; i<oscPacketLen; i++)
 				{
 					if(cmd->buf[i] == 0)
 					{
@@ -226,7 +226,7 @@ bool EosOsc::SendPacket(EosTcp &tcp, char *data, size_t size)
 
 	if(data && size!=0)
 	{
-		long header = static_cast<long>(size);
+		int32_t header = static_cast<int32_t>(size);
 		size_t totalSize = (size + sizeof(header));
 
 		if(m_SendPacket.data && m_SendPacket.size<totalSize)
