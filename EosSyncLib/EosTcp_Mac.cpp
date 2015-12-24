@@ -63,14 +63,14 @@ bool EosTcp_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 				addr.sin_family = AF_INET;
 				addr.sin_addr.s_addr = inet_addr(ip);
 				addr.sin_port = htons(port);
-                
-                int optval = 1;
-                if(setsockopt(m_Socket,SOL_SOCKET,SO_NOSIGPIPE,(const char*)&optval,sizeof(optval)) == -1)
-                {
-                    char text[256];
-                    sprintf(text, "%s setsockopt(SO_NOSIGPIPE) failed with error %d", GetLogPrefix(m_LogPrefix), errno);
-                    log.AddWarning(text);
-                }
+
+				int optval = 1;
+				if(setsockopt(m_Socket,SOL_SOCKET,SO_NOSIGPIPE,(const char*)&optval,sizeof(optval)) == -1)
+				{
+					char text[256];
+					sprintf(text, "%s setsockopt(SO_NOSIGPIPE) failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+					log.AddWarning(text);
+				}
 				
 				// temporarily make socket non-blocking during connect					
 				SetSocketBlocking(log, m_LogPrefix, m_Socket, false);
@@ -252,14 +252,14 @@ bool EosTcp_Mac::Send(EosLog &log, const char *data, size_t size)
 				char text[256];
 				sprintf(text, "%s send failed with error %d", GetLogPrefix(m_LogPrefix), errno);
 				log.AddError(text);
-                m_ConnectState = CONNECT_NOT_CONNECTED;
+				m_ConnectState = CONNECT_NOT_CONNECTED;
 			}
 			else if(static_cast<size_t>(result) != size)
 			{
 				char text[256];
 				sprintf(text, "%s send truncated %d of %d", GetLogPrefix(m_LogPrefix), static_cast<int>(result), static_cast<int>(size));
 				log.AddError(text);
-                m_ConnectState = CONNECT_NOT_CONNECTED;
+				m_ConnectState = CONNECT_NOT_CONNECTED;
 			}
 			else
 				return true;
@@ -309,7 +309,7 @@ const char* EosTcp_Mac::Recv(EosLog &log, unsigned int timeoutMS, size_t &size)
 					char text[256];
 					sprintf(text, "%s recv failed with error %d", GetLogPrefix(m_LogPrefix), errno);
 					log.AddError(text);
-                    m_ConnectState = CONNECT_NOT_CONNECTED;
+					m_ConnectState = CONNECT_NOT_CONNECTED;
 				}
 				else if(result > 0)
 				{
@@ -322,7 +322,7 @@ const char* EosTcp_Mac::Recv(EosLog &log, unsigned int timeoutMS, size_t &size)
 				char text[256];
 				sprintf(text, "%s select failed with error %d", GetLogPrefix(m_LogPrefix), errno);
 				log.AddError(text);
-                m_ConnectState = CONNECT_NOT_CONNECTED;
+				m_ConnectState = CONNECT_NOT_CONNECTED;
 			}
 		}
 		else
@@ -420,14 +420,14 @@ bool EosTcpServer_Mac::Initialize(EosLog &log, const char *ip, unsigned short po
 				sprintf(text, "%s setsockopt(SO_REUSEADDR) failed with error %d", EosTcp::GetLogPrefix(m_LogPrefix), errno);
 				log.AddWarning(text);
 			}
-            
-            optval = 1;
-            if(setsockopt(m_Socket,SOL_SOCKET,SO_NOSIGPIPE,(const char*)&optval,sizeof(optval)) == -1)
-            {
-                char text[256];
-                sprintf(text, "%s setsockopt(SO_NOSIGPIPE) failed with error %d", EosTcp::GetLogPrefix(m_LogPrefix), errno);
-                log.AddWarning(text);
-            }
+
+			optval = 1;
+			if(setsockopt(m_Socket,SOL_SOCKET,SO_NOSIGPIPE,(const char*)&optval,sizeof(optval)) == -1)
+			{
+				char text[256];
+				sprintf(text, "%s setsockopt(SO_NOSIGPIPE) failed with error %d", EosTcp::GetLogPrefix(m_LogPrefix), errno);
+				log.AddWarning(text);
+			}
 			
 			sockaddr_in addr;
 			memset(&addr, 0, sizeof(addr));
