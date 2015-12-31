@@ -1378,7 +1378,7 @@ void EosSyncData::RecvCmd(EosTcp &tcp, EosOsc &osc, EosLog &log, EosOsc::sComman
 	}
 	else if(m_Status.GetValue() != EosSyncStatus::SYNC_STATUS_UNINTIALIZED)
 	{
-		// is it a notifaction about show data changes?
+		// is it a notification about show data changes?
 		static const std::string sNotify("/eos/out/notify/");
 		if(cmd.path.find(sNotify) == 0)
 		{
@@ -1411,9 +1411,19 @@ void EosSyncData::RecvCmd(EosTcp &tcp, EosOsc &osc, EosLog &log, EosOsc::sComman
 					}
 
 					TARGETLIST_DATA::iterator i = targetData.find(listId);
-					if(i != targetData.end())
+					EosTargetList *targetList = ((i==targetData.end()) ? 0 : i->second);
+
+					// target list does not exist
+					if(!targetList && type==EosTarget::EOS_TARGET_CUE)
 					{
-						EosTargetList *targetList = i->second;
+						// new cue list created, add placeholder cue
+						targetList = new EosTargetList(EosTarget::EOS_TARGET_CUE, listId);
+						targetList->InitializeAsDummy();
+						targetData[listId] = targetList;
+					}
+
+					if( targetList )
+					{
 						targetList->Notify(log, cmd);
 						m_Status.UpdateFromChild( targetList->GetStatus() );
 						found = true;
