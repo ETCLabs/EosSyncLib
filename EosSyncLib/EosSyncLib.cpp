@@ -1352,6 +1352,8 @@ void EosSyncData::RecvCmd(EosTcp &tcp, EosOsc &osc, EosLog &log, EosOsc::sComman
 						EosTargetList *targetList = i->second;
 						targetList->Recv(tcp, osc, log, cmd);
 						m_Status.UpdateFromChild( targetList->GetStatus() );
+						if(type == EosTarget::EOS_TARGET_CUELIST)
+							RemoveOrphanedCues();
 						found = true;
 					}
 
@@ -1457,6 +1459,46 @@ void EosSyncData::RecvCmd(EosTcp &tcp, EosOsc &osc, EosLog &log, EosOsc::sComman
 				{
 					log.AddInfo("reset sync data, show cleared");
 					Clear();
+				}
+			}
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void EosSyncData::RemoveOrphanedCues()
+{
+	SHOW_DATA::const_iterator showDataConstIter = m_ShowData.find(EosTarget::EOS_TARGET_CUELIST);
+	const TARGETLIST_DATA *cueListList = ((showDataConstIter==m_ShowData.end()) ? 0 : (&showDataConstIter->second));
+	if( cueListList )
+	{
+		TARGETLIST_DATA::const_iterator targetListConstIter = cueListList->find(0);
+		const EosTargetList *cueList = ((targetListConstIter==cueListList->end()) ? 0 : targetListConstIter->second);
+		if( cueList )
+		{
+			const EosTargetList::TARGETS &cueListTargets = cueList->GetTargets();
+
+			SHOW_DATA::iterator showDataIter = m_ShowData.find(EosTarget::EOS_TARGET_CUE);
+			TARGETLIST_DATA *cues = ((showDataIter==m_ShowData.end()) ? 0 : (&showDataIter->second));
+			if( cues )
+			{
+				for(TARGETLIST_DATA::iterator i=cues->begin(); i!=cues->end(); )
+				{
+					int listId = i->first;
+					if(listId != 0)
+					{
+						if(cueListTargets.find(listId) == cueListTargets.end())
+						{
+							delete i->second;
+							TARGETLIST_DATA::iterator eraseMe = i++;
+							cues->erase(eraseMe);
+						}
+						else
+							i++;
+					}
+					else
+						i++;
 				}
 			}
 		}

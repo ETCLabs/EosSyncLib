@@ -251,6 +251,7 @@ private:
 	virtual void Recv(EosTcp &tcp, EosOsc &osc, EosLog &log);
 	virtual void RecvCmd(EosTcp &tcp, EosOsc &osc, EosLog &log, EosOsc::sCommand &command);
 	virtual void OnTargeListInitialSyncComplete(EosTargetList &targetList);
+	virtual void RemoveOrphanedCues();
 };
 
 
