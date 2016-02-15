@@ -135,7 +135,7 @@ const char* EosUdpIn_Mac::RecvPacket(EosLog &log, unsigned int timeoutMS, unsign
 			if(result > 0)
 			{
 				socklen_t fromSize = (addrSize ? static_cast<socklen_t>(*addrSize) : 0);
-				len = recvfrom(m_Socket, m_RecvBuf, EOS_UDP_RECV_BUF_LEN, 0, static_cast<sockaddr*>(addr), (addr && addrSize) ? (&fromSize) : 0);
+				len = static_cast<int>( recvfrom(m_Socket,m_RecvBuf,EOS_UDP_RECV_BUF_LEN,0,static_cast<sockaddr*>(addr),(addr && addrSize) ? (&fromSize) : 0) );
 				if(len == -1)
 				{
 					char text[256];
@@ -252,7 +252,7 @@ bool EosUdpOut_Mac::SendPacket(EosLog &log, const char *buf, int len)
 	{
 		if(buf && len>0)
 		{
-			int bytesSent = sendto(m_Socket, buf, len, 0, reinterpret_cast<sockaddr*>(&m_Addr), static_cast<socklen_t>(sizeof(m_Addr)));
+			int bytesSent = static_cast<int>( sendto(m_Socket,buf,len,0,reinterpret_cast<sockaddr*>(&m_Addr),static_cast<socklen_t>(sizeof(m_Addr))) );
 			if(bytesSent == -1)
 			{
 				char text[256];

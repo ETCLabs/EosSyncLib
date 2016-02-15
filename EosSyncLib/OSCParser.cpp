@@ -2461,7 +2461,7 @@ bool OSCParser::ProcessBundle(OSCParserClient &client, char *buf, size_t size, b
 	if(size < OSC_MIN_BUNDLE_SIZE)
 	{
 		char msg[256];
-		sprintf(msg, "error, malformed bundle of size %u, expecting minimum size of %u", size, OSC_MIN_BUNDLE_SIZE);
+		sprintf(msg, "error, malformed bundle of size %u, expecting minimum size of %u", static_cast<unsigned int>(size), static_cast<unsigned int>(OSC_MIN_BUNDLE_SIZE));
 		client.OSCParserClient_Log(msg);
 		return false;
 	}
@@ -2493,7 +2493,7 @@ bool OSCParser::ProcessBundle(OSCParserClient &client, char *buf, size_t size, b
 			else
 			{
 				char msg[256];
-				sprintf(msg, "error, malformed bundle with reported size %u, but packet size only %u", bundleSize, size);
+				sprintf(msg, "error, malformed bundle with reported size %u, but packet size only %u", static_cast<unsigned int>(bundleSize), static_cast<unsigned int>(size));
 				client.OSCParserClient_Log(msg);
 				return false;
 			}
