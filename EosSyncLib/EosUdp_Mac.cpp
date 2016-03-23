@@ -200,6 +200,14 @@ bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 			m_Socket = socket(AF_INET, SOCK_DGRAM, 0);
 			if(m_Socket != -1)
 			{
+				int optval = 1;
+				if(setsockopt(m_Socket,SOL_SOCKET,SO_BROADCAST,(const char*)&optval,sizeof(optval)) == -1)
+				{
+					char text[256];
+					sprintf(text, "%s setsockopt(SO_BROADCAST) failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
+					log.AddWarning(text);
+				}
+				
 				memset(&m_Addr, 0, sizeof(m_Addr));
 				m_Addr.sin_family = AF_INET;
 				m_Addr.sin_addr.s_addr = inet_addr(ip);
