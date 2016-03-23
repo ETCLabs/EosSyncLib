@@ -215,6 +215,14 @@ bool EosUdpOut_Win::Initialize(EosLog &log, const char *ip, unsigned short port)
 				m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 				if(m_Socket != INVALID_SOCKET)
 				{
+					int optval = 1;
+					if(setsockopt(m_Socket,SOL_SOCKET,SO_BROADCAST,(const char*)&optval,sizeof(optval)) == SOCKET_ERROR)
+					{
+						char text[256];
+						sprintf(text, "%s setsockopt(SO_BROADCAST) failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), WSAGetLastError());
+						log.AddWarning(text);
+					}
+
 					memset(&m_Addr, 0, sizeof(m_Addr));
 					m_Addr.sin_family = AF_INET;
 					m_Addr.sin_addr.S_un.S_addr = inet_addr(ip);
