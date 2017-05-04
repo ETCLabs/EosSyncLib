@@ -22,8 +22,10 @@
 
 #ifdef WIN32
 	#include "EosUdp_Win.h"
-#else
+#elif defined TARGET_OS_MAC
 	#include "EosUdp_Mac.h"
+#elif defined __linux__
+	#include "EosUdp_Nix.h"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +51,7 @@ void EosUdpIn::SetLogPrefix(const char *name, const char *ip, unsigned short por
 	else
 		logPrefix.clear();
 
-	size_t maxLen = strlen("255.255.255.255");
+	size_t maxLen = std::string("255.255.255.255").length();
 	if(logPrefix.size() > maxLen)
 		logPrefix.resize(maxLen);
 
@@ -77,8 +79,10 @@ EosUdpIn* EosUdpIn::Create()
 {
 #ifdef WIN32
 	return (new EosUdpIn_Win());
-#else
+#elif defined TARGET_OS_MAC
 	return (new EosUdpIn_Mac());
+#elif defined __linux__
+	return (new EosUdpIn_Nix());
 #endif
 }
 
@@ -88,8 +92,10 @@ EosUdpOut* EosUdpOut::Create()
 {
 #ifdef WIN32
 	return (new EosUdpOut_Win());
-#else
+#elif defined TARGET_OS_MAC
 	return (new EosUdpOut_Mac());
+#elif defined __linux__
+	return (new EosUdpOut_Nix());
 #endif
 }
 

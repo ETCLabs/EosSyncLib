@@ -10,6 +10,9 @@ EosSyncLib is open-source software (developed by a combination of end users and 
 
 We also welcome pull requests for bug fixes and feature additions.
 
+##This Fork
+The purpose of this fork is to add Linux compatibility with as little change as possible to the overall codebase, and without breaking compatibility with other platforms.
+
 #Simple Example
 ```C++
 #include "EosSyncLib.h"
