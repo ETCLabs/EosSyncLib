@@ -27,6 +27,7 @@
 #include <errno.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <cstring>
 
 #define RECV_BUF_SIZE 1024
 
@@ -59,11 +60,13 @@ bool EosTcp_Nix::Initialize(EosLog &log, const char *ip, unsigned short port)
 			if(m_Socket != -1)
 			{
 				sockaddr_in addr;
-				memset(&addr, 0, sizeof(addr));
+				std::memset(&addr, 0, sizeof(addr));
 				addr.sin_family = AF_INET;
 				addr.sin_addr.s_addr = inet_addr(ip);
 				addr.sin_port = htons(port);
 
+				// SO_NOSIGPIPE not defined in linux. We will need another way to handle SIGPIPE
+				/*
 				int optval = 1;
 				if(setsockopt(m_Socket,SOL_SOCKET,SO_NOSIGPIPE,(const char*)&optval,sizeof(optval)) == -1)
 				{
@@ -71,6 +74,7 @@ bool EosTcp_Nix::Initialize(EosLog &log, const char *ip, unsigned short port)
 					sprintf(text, "%s setsockopt(SO_NOSIGPIPE) failed with error %d", GetLogPrefix(m_LogPrefix), errno);
 					log.AddWarning(text);
 				}
+				*/
 				
 				// temporarily make socket non-blocking during connect					
 				SetSocketBlocking(log, m_LogPrefix, m_Socket, false);
@@ -421,6 +425,8 @@ bool EosTcpServer_Nix::Initialize(EosLog &log, const char *ip, unsigned short po
 				log.AddWarning(text);
 			}
 
+			// SO_NOSIGPIPE not defined in linux.  We will need another way to handle SIGPIPE
+			/*
 			optval = 1;
 			if(setsockopt(m_Socket,SOL_SOCKET,SO_NOSIGPIPE,(const char*)&optval,sizeof(optval)) == -1)
 			{
@@ -428,9 +434,10 @@ bool EosTcpServer_Nix::Initialize(EosLog &log, const char *ip, unsigned short po
 				sprintf(text, "%s setsockopt(SO_NOSIGPIPE) failed with error %d", EosTcp::GetLogPrefix(m_LogPrefix), errno);
 				log.AddWarning(text);
 			}
+			*/
 			
 			sockaddr_in addr;
-			memset(&addr, 0, sizeof(addr));
+			std::memset(&addr, 0, sizeof(addr));
 			addr.sin_family = AF_INET;
 			addr.sin_addr.s_addr = inet_addr(actualIP);
 			addr.sin_port = htons(port);

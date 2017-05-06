@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h>
+#include <cstring>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +61,7 @@ bool EosUdpIn_Nix::Initialize(EosLog &log, const char *ip, unsigned short port)
 				}
 				
 				sockaddr_in addr;
-				memset(&addr, 0, sizeof(addr));
+				std::memset(&addr, 0, sizeof(addr));
 				addr.sin_family = AF_INET;
 				addr.sin_addr.s_addr = inet_addr(ip);
 				addr.sin_port = htons(port);
@@ -208,7 +209,7 @@ bool EosUdpOut_Nix::Initialize(EosLog &log, const char *ip, unsigned short port)
 					log.AddWarning(text);
 				}
 				
-				memset(&m_Addr, 0, sizeof(m_Addr));
+				std::memset(&m_Addr, 0, sizeof(m_Addr));
 				m_Addr.sin_family = AF_INET;
 				m_Addr.sin_addr.s_addr = inet_addr(ip);
 				m_Addr.sin_port = htons(port);

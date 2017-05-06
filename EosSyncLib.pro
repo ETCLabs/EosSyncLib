@@ -5,7 +5,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = EosSyncLib
+TARGET = bin/EosSyncLib
 INCLUDEPATH += .
 CONFIG += qt4 debug c++0x
 
