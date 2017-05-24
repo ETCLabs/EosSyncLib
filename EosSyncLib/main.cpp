@@ -39,8 +39,8 @@ void FlushLogQ(EosSyncLib &eosSyncLib)
 			const char *type = 0;
 			switch( msg.type )
 			{
-				//case EosLog::LOG_MSG_TYPE_DEBUG:	type="Debug"; break;
-				//case EosLog::LOG_MSG_TYPE_INFO:		type="Info"; break;
+				case EosLog::LOG_MSG_TYPE_DEBUG:	type="Debug"; break;
+				case EosLog::LOG_MSG_TYPE_INFO:		type="Info"; break;
 				case EosLog::LOG_MSG_TYPE_WARNING:	type="Warning"; break;
 				case EosLog::LOG_MSG_TYPE_ERROR:	type="Error"; break;
 			}

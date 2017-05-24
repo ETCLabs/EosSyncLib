@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = ../../bin/EosSyncLib
+TARGET = ../../bin/EosSyncTest
 INCLUDEPATH += .
 
 # Input

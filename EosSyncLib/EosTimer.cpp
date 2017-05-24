@@ -91,10 +91,10 @@ unsigned int EosTimer::GetTimestamp()
 {
 #ifdef WIN32
 	return timeGetTime();
-#elif defined TARGET_IS_MAC
+#elif defined TARGET_OS_MAC
 	return static_cast<unsigned int>(mach_absolute_time() * sm_toMS);
 #elif defined __linux__
-	return std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+	return std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::steady_clock::now().time_since_epoch()).count();
 #endif
 }
 

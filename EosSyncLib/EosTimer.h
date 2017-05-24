@@ -42,7 +42,7 @@ public:
 private:
 	unsigned int	m_Timestamp;
 
-#ifndef WIN32
+#ifdef TARGET_OS_MAC
 	static double	sm_toMS;
 #endif
 };
