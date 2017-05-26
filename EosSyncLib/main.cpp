@@ -21,6 +21,7 @@
 #include "EosSyncLib.h"
 #include "EosTimer.h"
 #include <time.h>
+#include <sstream>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -38,8 +39,8 @@ void FlushLogQ(EosSyncLib &eosSyncLib)
 			const char *type = 0;
 			switch( msg.type )
 			{
-				//case EosLog::LOG_MSG_TYPE_DEBUG:	type="Debug"; break;
-				//case EosLog::LOG_MSG_TYPE_INFO:		type="Info"; break;
+				case EosLog::LOG_MSG_TYPE_DEBUG:	type="Debug"; break;
+				case EosLog::LOG_MSG_TYPE_INFO:		type="Info"; break;
 				case EosLog::LOG_MSG_TYPE_WARNING:	type="Warning"; break;
 				case EosLog::LOG_MSG_TYPE_ERROR:	type="Error"; break;
 			}
@@ -76,14 +77,17 @@ void PrintSummary(const EosSyncData &syncData)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char **argv)
 {
+	char *ip = "127.0.0.1";
+	unsigned short port = EosSyncLib::DEFAULT_PORT;
+
 	EosTimer::Init();
 	
 	printf("Connecting...\n");
 
 	EosSyncLib eosSyncLib;
-	if( eosSyncLib.Initialize("127.0.0.1",EosSyncLib::DEFAULT_PORT) )
+	if( eosSyncLib.Initialize(ip, port) )
 	{
 		bool wasConnected = false;
 		bool wasSyncd = false;

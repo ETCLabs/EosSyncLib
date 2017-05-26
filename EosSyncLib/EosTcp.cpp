@@ -23,8 +23,10 @@
 
 #ifdef WIN32
 	#include "EosTcp_Win.h"
-#else
+#elif defined TARGET_OS_MAC
 	#include "EosTcp_Mac.h"
+#elif defined __linux__
+	#include "EosTcp_Nix.h"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +45,7 @@ void EosTcp::SetLogPrefix(const char *name, const char *ip, unsigned short port,
 	else
 		logPrefix.clear();
 
-	size_t maxLen = strlen("255.255.255.255");
+	size_t maxLen = std::string("255.255.255.255").length();
 	if(logPrefix.size() > maxLen)
 		logPrefix.resize(maxLen);
 
@@ -71,8 +73,10 @@ EosTcp* EosTcp::Create()
 {
 #ifdef WIN32
 	return (new EosTcp_Win());
-#else
+#elif defined TARGET_OS_MAC
 	return (new EosTcp_Mac());
+#elif defined __linux__
+	return (new EosTcp_Nix());
 #endif
 }
 
@@ -89,8 +93,10 @@ EosTcpServer* EosTcpServer::Create()
 {
 #ifdef WIN32
 	return (new EosTcpServer_Win());
-#else
+#elif defined TARGET_OS_MAC
 	return (new EosTcpServer_Mac());
+#elif defined __linux__
+	return (new EosTcpServer_Nix());
 #endif
 }
 

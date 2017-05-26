@@ -23,11 +23,14 @@
 #ifdef WIN32
 	#include <Winsock2.h>
 	#include <Windows.h>
-#else
+#elif defined TARGET_OS_MAC
 	#include <mach/mach.h>
 	#include <mach/mach_time.h>
 	#include <unistd.h>
 	double EosTimer::sm_toMS = 0;
+#elif defined __linux__
+	#include <chrono>
+	#include <thread>
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +74,7 @@ bool EosTimer::GetExpired(unsigned int ms) const
 
 void EosTimer::Init()
 {
-#ifndef WIN32
+#ifdef TARGET_OS_MAC
 	if(sm_toMS == 0)
 	{
 		mach_timebase_info_data_t timeBase;
@@ -88,8 +91,10 @@ unsigned int EosTimer::GetTimestamp()
 {
 #ifdef WIN32
 	return timeGetTime();
-#else
+#elif defined TARGET_OS_MAC
 	return static_cast<unsigned int>(mach_absolute_time() * sm_toMS);
+#elif defined __linux__
+	return std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::steady_clock::now().time_since_epoch()).count();
 #endif
 }
 
@@ -99,8 +104,10 @@ void EosTimer::SleepMS(unsigned int ms)
 {
 #ifdef WIN32
 	Sleep(ms);
-#else
+#elif defined TARGET_OS_MAC
 	usleep(ms*1000);
+#elif defined __linux__
+	std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 #endif
 }
 

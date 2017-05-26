@@ -19,32 +19,52 @@
 // THE SOFTWARE.
 
 #pragma once
-#ifndef EOS_TIMER_H
-#define EOS_TIMER_H
+#ifndef EOS_TCP_NIX_H
+#define EOS_TCP_NIX_H
+
+#ifndef EOS_TCP_H
+#include "EosTcp.h"
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosTimer
+class EosTcp_Nix
+	: public EosTcp
 {
 public:
-	EosTimer();
-	virtual ~EosTimer() {}
+	EosTcp_Nix();
+	virtual ~EosTcp_Nix();
+
+	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
+	virtual bool InitializeAccepted(EosLog &log, void *pSocket);
+	virtual void Shutdown();
+	virtual void Tick(EosLog &log);
+	virtual bool Send(EosLog &log, const char *data, size_t size);
+	virtual const char* Recv(EosLog &log, unsigned int timeoutMS, size_t &size);
 	
-	virtual void Start();
-	virtual unsigned int Restart();
-	virtual unsigned int GetElapsed() const;
-	virtual bool GetExpired(unsigned int ms) const;
-	
-	static void Init();
-	static unsigned int GetTimestamp();
-	static void SleepMS(unsigned int ms);
+	static bool SetSocketBlocking(EosLog &log, const std::string &logPrefix, int socket, bool b);
 
 private:
-	unsigned int	m_Timestamp;
+	int		m_Socket;
+	char	*m_RecvBuf;
+};
 
-#ifdef TARGET_OS_MAC
-	static double	sm_toMS;
-#endif
+////////////////////////////////////////////////////////////////////////////////
+
+class EosTcpServer_Nix
+	: public EosTcpServer
+{
+public:
+	EosTcpServer_Nix();
+	virtual ~EosTcpServer_Nix();
+
+	virtual bool Initialize(EosLog &log, unsigned short port);
+	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
+	virtual void Shutdown();
+	virtual EosTcp* Recv(EosLog &log, unsigned int timeoutMS, void *addr, int *addrSize);
+
+private:
+	int	m_Socket;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

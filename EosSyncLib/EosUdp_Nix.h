@@ -19,32 +19,52 @@
 // THE SOFTWARE.
 
 #pragma once
-#ifndef EOS_TIMER_H
-#define EOS_TIMER_H
+#ifndef EOS_UDP_NIX_H
+#define EOS_UDP_NIX_H
+
+#ifndef EOS_UDP_H
+#include "EosUdp.h"
+#endif
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosTimer
+class EosUdpIn_Nix
+	: public EosUdpIn
 {
 public:
-	EosTimer();
-	virtual ~EosTimer() {}
-	
-	virtual void Start();
-	virtual unsigned int Restart();
-	virtual unsigned int GetElapsed() const;
-	virtual bool GetExpired(unsigned int ms) const;
-	
-	static void Init();
-	static unsigned int GetTimestamp();
-	static void SleepMS(unsigned int ms);
+	EosUdpIn_Nix();
+	virtual ~EosUdpIn_Nix();
+
+	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
+	virtual bool IsInitialized() const {return (m_Socket!=-1);}
+	virtual void Shutdown();
+	virtual const char* RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize);
 
 private:
-	unsigned int	m_Timestamp;
+	int	m_Socket;
+};
 
-#ifdef TARGET_OS_MAC
-	static double	sm_toMS;
-#endif
+////////////////////////////////////////////////////////////////////////////////
+
+class EosUdpOut_Nix
+	: public EosUdpOut
+{
+public:
+	EosUdpOut_Nix();
+	virtual ~EosUdpOut_Nix();
+
+	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
+	virtual bool IsInitialized() const {return (m_Socket!=-1);}
+	virtual void Shutdown();
+	virtual bool SendPacket(EosLog &log, const char *buf, int len);
+
+private:
+	int			m_Socket;
+	sockaddr_in	m_Addr;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

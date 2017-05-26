@@ -41,3 +41,13 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# ==========================
+# Linux
+# ==========================
+
+#Object code generated during test compilations
+*.o
+
+#qmake path
+.qmake.stash

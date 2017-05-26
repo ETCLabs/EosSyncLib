@@ -18,29 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "EosUdp_Mac.h"
+#include "EosUdp_Nix.h"
 #include "EosLog.h"
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h>
+#include <cstring>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-EosUdpIn_Mac::EosUdpIn_Mac()
+EosUdpIn_Nix::EosUdpIn_Nix()
 	: m_Socket(-1)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-EosUdpIn_Mac::~EosUdpIn_Mac()
+EosUdpIn_Nix::~EosUdpIn_Nix()
 {
 	Shutdown();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
+bool EosUdpIn_Nix::Initialize(EosLog &log, const char *ip, unsigned short port)
 {
 	if(	!IsInitialized() )
 	{
@@ -60,7 +61,7 @@ bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 				}
 				
 				sockaddr_in addr;
-				memset(&addr, 0, sizeof(addr));
+				std::memset(&addr, 0, sizeof(addr));
 				addr.sin_family = AF_INET;
 				addr.sin_addr.s_addr = inet_addr(ip);
 				addr.sin_port = htons(port);
@@ -106,7 +107,7 @@ bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void EosUdpIn_Mac::Shutdown()
+void EosUdpIn_Nix::Shutdown()
 {
 	if( IsInitialized() )
 	{
@@ -117,7 +118,7 @@ void EosUdpIn_Mac::Shutdown()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const char* EosUdpIn_Mac::RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize)
+const char* EosUdpIn_Nix::RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize)
 {
 	if( IsInitialized() )
 	{
@@ -175,21 +176,21 @@ const char* EosUdpIn_Mac::RecvPacket(EosLog &log, unsigned int timeoutMS, unsign
 
 ////////////////////////////////////////////////////////////////////////////////
 
-EosUdpOut_Mac::EosUdpOut_Mac()
+EosUdpOut_Nix::EosUdpOut_Nix()
 	: m_Socket(-1)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-EosUdpOut_Mac::~EosUdpOut_Mac()
+EosUdpOut_Nix::~EosUdpOut_Nix()
 {
 	Shutdown();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
+bool EosUdpOut_Nix::Initialize(EosLog &log, const char *ip, unsigned short port)
 {
 	if(	!IsInitialized() )
 	{
@@ -208,7 +209,7 @@ bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 					log.AddWarning(text);
 				}
 				
-				memset(&m_Addr, 0, sizeof(m_Addr));
+				std::memset(&m_Addr, 0, sizeof(m_Addr));
 				m_Addr.sin_family = AF_INET;
 				m_Addr.sin_addr.s_addr = inet_addr(ip);
 				m_Addr.sin_port = htons(port);
@@ -243,7 +244,7 @@ bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void EosUdpOut_Mac::Shutdown()
+void EosUdpOut_Nix::Shutdown()
 {
 	if( IsInitialized() )
 	{
@@ -254,7 +255,7 @@ void EosUdpOut_Mac::Shutdown()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpOut_Mac::SendPacket(EosLog &log, const char *buf, int len)
+bool EosUdpOut_Nix::SendPacket(EosLog &log, const char *buf, int len)
 {
 	if( IsInitialized()  )
 	{
