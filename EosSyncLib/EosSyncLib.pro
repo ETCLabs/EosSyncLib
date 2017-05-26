@@ -1,6 +1,7 @@
 TEMPLATE = app
 TARGET = ../../bin/EosSyncTest
 INCLUDEPATH += .
+CONFIG += debug
 
 # Input
 HEADERS += EosLog.h \

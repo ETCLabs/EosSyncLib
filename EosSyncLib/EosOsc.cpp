@@ -195,7 +195,7 @@ void EosOsc::Recv(EosTcp &tcp, unsigned int timeoutMS, CMD_Q &cmdQ)
 				// shift away processed data
 				m_InputBuffer.size -= totalSize;
 				if(m_InputBuffer.size != 0)
-					memcpy(m_InputBuffer.data, &m_InputBuffer.data[totalSize], m_InputBuffer.size);
+					memmove(m_InputBuffer.data, &m_InputBuffer.data[totalSize], m_InputBuffer.size);
 			}
 			else
 			{
