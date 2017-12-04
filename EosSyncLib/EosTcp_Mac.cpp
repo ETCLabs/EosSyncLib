@@ -49,10 +49,10 @@ EosTcp_Mac::~EosTcp_Mac()
 
 bool EosTcp_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 {
+	SetLogPrefix("tcp client", ip, port, m_LogPrefix);
+	
 	if(m_Socket == -1)
 	{
-		SetLogPrefix("tcp client", ip, port, m_LogPrefix);
-	
 		if(ip && *ip)
 		{
 			m_Socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -118,8 +118,8 @@ bool EosTcp_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 	else
 	{
 		char text[256];
-		sprintf(text, "%s initialize failed, already initialized", GetLogPrefix(m_LogPrefix));
-		log.AddWarning(text);
+		sprintf(text, "%s, already initialized", GetLogPrefix(m_LogPrefix));
+		log.AddInfo(text);
 	}
 	
 	return false;
@@ -405,11 +405,11 @@ bool EosTcpServer_Mac::Initialize(EosLog &log, unsigned short port)
 
 bool EosTcpServer_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 {
+	const char *actualIP = (ip ? ip : "0.0.0.0");
+	EosTcp::SetLogPrefix("tcp server", actualIP, port, m_LogPrefix);
+	
 	if(m_Socket == -1)
 	{
-		const char *actualIP = (ip ? ip : "0.0.0.0");
-		EosTcp::SetLogPrefix("tcp server", actualIP, port, m_LogPrefix);
-		
 		m_Socket = socket(AF_INET, SOCK_STREAM, 0);
 		if(m_Socket != -1)
 		{
