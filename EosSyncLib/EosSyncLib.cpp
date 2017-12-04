@@ -162,13 +162,13 @@ void EosTarget::Recv(EosLog &log, EosOsc::sCommand &command, const sPathData &pa
 
 					if( command.args )
 					{
-						for(size_t i=0; i<command.argCount; i++)
+						for(size_t j=0; j<command.argCount; j++)
 						{
-							size_t propIndex = (propOffset + i);
+							size_t propIndex = (propOffset + j);
 							if(propIndex < group.props.size())
 							{
 								sProperty &prop = group.props[propIndex];
-								if( !command.args[i].GetString(prop.value) )
+								if( !command.args[j].GetString(prop.value) )
 									prop.value.clear();
 								prop.initialized = true;
 							}
@@ -190,14 +190,14 @@ void EosTarget::Recv(EosLog &log, EosOsc::sCommand &command, const sPathData &pa
 
 					// did we get all the properties we are expecting?
 					bool gotAllProps = true;
-					for(PROP_GROUPS::const_iterator i=m_PropGroups.begin(); i!=m_PropGroups.end() && gotAllProps; i++)
+					for(PROP_GROUPS::const_iterator j=m_PropGroups.begin(); j!=m_PropGroups.end() && gotAllProps; j++)
 					{
-						const sPropertyGroup &g = i->second;
+						const sPropertyGroup &g = j->second;
 						if( g.initialized )
 						{
-							for(PROPS::const_iterator j=g.props.begin(); j!=g.props.end() && gotAllProps; j++)
+							for(PROPS::const_iterator k=g.props.begin(); k!=g.props.end() && gotAllProps; k++)
 							{
-								if( !j->initialized )
+								if( !k->initialized )
 									gotAllProps = false;
 							}
 						}
@@ -1042,8 +1042,8 @@ void EosTargetList::Notify(EosLog &log, EosOsc::sCommand &command)
 										int rangeEnd = atoi(s);
 										if(rangeStart <= rangeEnd)
 										{
-											for(int i=rangeStart; i<=rangeEnd; i++)
-												targets.insert(i);
+											for(int j=rangeStart; j<=rangeEnd; j++)
+												targets.insert(j);
 											gotRange = true;
 										}
 									}
@@ -1346,10 +1346,10 @@ void EosSyncData::RecvCmd(EosTcp &tcp, EosOsc &osc, EosLog &log, EosOsc::sComman
 							break;	// invalid list id
 					}
 
-					TARGETLIST_DATA::iterator i = targetData.find(listId);
-					if(i != targetData.end())
+					TARGETLIST_DATA::iterator j = targetData.find(listId);
+					if(j != targetData.end())
 					{
-						EosTargetList *targetList = i->second;
+						EosTargetList *targetList = j->second;
 						targetList->Recv(tcp, osc, log, cmd);
 						m_Status.UpdateFromChild( targetList->GetStatus() );
 						if(type == EosTarget::EOS_TARGET_CUELIST)
@@ -1412,8 +1412,8 @@ void EosSyncData::RecvCmd(EosTcp &tcp, EosOsc &osc, EosLog &log, EosOsc::sComman
 							break;	// invalid list id
 					}
 
-					TARGETLIST_DATA::iterator i = targetData.find(listId);
-					EosTargetList *targetList = ((i==targetData.end()) ? 0 : i->second);
+					TARGETLIST_DATA::iterator j = targetData.find(listId);
+					EosTargetList *targetList = ((j==targetData.end()) ? 0 : j->second);
 
 					// target list does not exist
 					if(!targetList && type==EosTarget::EOS_TARGET_CUE)

@@ -42,10 +42,10 @@ EosTcp_Win::~EosTcp_Win()
 
 bool EosTcp_Win::Initialize(EosLog &log, const char *ip, unsigned short port)
 {
+	SetLogPrefix("tcp client", ip, port, m_LogPrefix);
+
 	if(m_Socket == INVALID_SOCKET)
 	{
-		SetLogPrefix("tcp client", ip, port, m_LogPrefix);
-
 		if(ip && *ip)
 		{
 			WSADATA wsaData;
@@ -115,8 +115,8 @@ bool EosTcp_Win::Initialize(EosLog &log, const char *ip, unsigned short port)
 	else
 	{
 		char text[256];
-		sprintf(text, "%s initialize failed, already initialized", GetLogPrefix(m_LogPrefix));
-		log.AddWarning(text);
+		sprintf(text, "%s, already initialized", GetLogPrefix(m_LogPrefix));
+		log.AddInfo(text);
 	}
 
 	return (m_Socket != INVALID_SOCKET);
@@ -373,11 +373,11 @@ bool EosTcpServer_Win::Initialize(EosLog &log, unsigned short port)
 
 bool EosTcpServer_Win::Initialize(EosLog &log, const char *ip, unsigned short port)
 {
+	const char *actualIP = (ip ? ip : "0.0.0.0");
+	EosTcp::SetLogPrefix("tcp server", actualIP, port, m_LogPrefix);
+
 	if(m_Socket == INVALID_SOCKET)
 	{
-		const char *actualIP = (ip ? ip : "0.0.0.0");
-		EosTcp::SetLogPrefix("tcp server", actualIP, port, m_LogPrefix);
-
 		WSADATA wsaData;
 		int result = WSAStartup(MAKEWORD(2,2), &wsaData);
 		if(result == 0)
