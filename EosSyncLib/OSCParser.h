@@ -89,6 +89,8 @@ public:
 	virtual bool Add(const char *buf, size_t size);
 	virtual char* GetNextFrame(size_t &size);
 	virtual char* CreateFrame(const char *buf, size_t &size) const;
+	virtual size_t GetSize() const {return m_Size;}
+	virtual size_t GetCapacity() const {return m_Capacity;}
 	
 	static char* CreateFrame(EnumFrameMode frameMode, const char *buf, size_t &size);
 	static char* CreateFrame_Mode_1_0(const char *buf, size_t &size);
@@ -164,11 +166,14 @@ public:
 	static char GetCharFromArgumentType(EnumArgumentTypes type);
 	static char* Get32BitAligned(char *start, char *p);
 	static size_t Get32BitAlignedSize(size_t size);
+	static void Swap16(void *buf);
 	static void Swap32(void *buf);
 	static void Swap64(void *buf);
 	static const char* GetSafeString(const char*buf, size_t size);
 	static bool IsIntString(const char *buf);
 	static bool IsFloatString(const char *buf);
+	static int16_t GetInt16FromBuf(const char *buf);
+	static uint16_t GetUInt16FromBuf(const char *buf);
 	static int32_t GetInt32FromBuf(const char *buf);
 	static uint32_t GetUInt32FromBuf(const char *buf);
 	static int64_t GetInt64FromBuf(const char *buf);

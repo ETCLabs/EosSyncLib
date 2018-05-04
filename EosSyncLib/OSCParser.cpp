@@ -473,10 +473,13 @@ bool OSCArgument::GetFloat(float &f) const
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
+		case OSC_TYPE_MIDI:
+		case OSC_TYPE_RGBA32:
 			f = static_cast<float>( GetInt32FromBuf(m_pBuf) );
 			return true;
 
 		case OSC_TYPE_INT64:
+		case OSC_TYPE_TIME:
 			f = static_cast<float>( GetInt64FromBuf(m_pBuf) );
 			return true;
 
@@ -523,10 +526,13 @@ bool OSCArgument::GetDouble(double &d) const
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
+		case OSC_TYPE_MIDI:
+		case OSC_TYPE_RGBA32:
 			d = static_cast<double>( GetInt32FromBuf(m_pBuf) );
 			return true;
 
 		case OSC_TYPE_INT64:
+		case OSC_TYPE_TIME:
 			d = static_cast<double>( GetInt64FromBuf(m_pBuf) );
 			return true;
 
@@ -573,10 +579,13 @@ bool OSCArgument::GetInt(int &n) const
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
+		case OSC_TYPE_MIDI:
+		case OSC_TYPE_RGBA32:
 			n = static_cast<int>( GetInt32FromBuf(m_pBuf) );
 			return true;
 
 		case OSC_TYPE_INT64:
+		case OSC_TYPE_TIME:
 			n = static_cast<int>( GetInt64FromBuf(m_pBuf) );
 			return true;
 
@@ -631,10 +640,13 @@ bool OSCArgument::GetUInt(unsigned int &n) const
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
+		case OSC_TYPE_MIDI:
+		case OSC_TYPE_RGBA32:
 			n = static_cast<unsigned int>( GetUInt32FromBuf(m_pBuf) );
 			return true;
 
 		case OSC_TYPE_INT64:
+		case OSC_TYPE_TIME:
 			n = static_cast<unsigned int>( GetUInt64FromBuf(m_pBuf) );
 			return true;
 
@@ -689,10 +701,13 @@ bool OSCArgument::GetInt64(int64_t &n) const
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
+		case OSC_TYPE_MIDI:
+		case OSC_TYPE_RGBA32:
 			n = static_cast<int64_t>( GetInt32FromBuf(m_pBuf) );
 			return true;
 
 		case OSC_TYPE_INT64:
+		case OSC_TYPE_TIME:
 			n = GetInt64FromBuf(m_pBuf);
 			return true;
 
@@ -747,10 +762,13 @@ bool OSCArgument::GetUInt64(uint64_t &n) const
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
+		case OSC_TYPE_MIDI:
+		case OSC_TYPE_RGBA32:
 			n = static_cast<uint64_t>( GetUInt32FromBuf(m_pBuf) );
 			return true;
 
 		case OSC_TYPE_INT64:
+		case OSC_TYPE_TIME:
 			n = GetUInt64FromBuf(m_pBuf);
 			return true;
 
@@ -819,7 +837,6 @@ bool OSCArgument::GetString(std::string &str) const
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
-		case OSC_TYPE_INT64:
 			{
 				int n;
 				if( GetInt(n) )
@@ -832,14 +849,53 @@ bool OSCArgument::GetString(std::string &str) const
 			}
 			break;
 
+		case OSC_TYPE_INT64:
+			{
+				int64_t n;
+				if( GetInt64(n) )
+				{
+					char buf[33];
+					snprintf(buf, sizeof(buf), "%lld", n);
+					str = buf;
+					return true;
+				}
+			}
+			break;
+
+		case OSC_TYPE_MIDI:
+		case OSC_TYPE_RGBA32:
+			{
+				unsigned int n;
+				if( GetUInt(n) )
+				{
+					char buf[33];
+					snprintf(buf, sizeof(buf), "%.8x", n);
+					str = buf;
+					return true;
+				}
+			}
+			break;
+
 		case OSC_TYPE_FLOAT32:
-		case OSC_TYPE_FLOAT64:
 			{
 				float f;
 				if( GetFloat(f) )
 				{
-					char buf[33];
+					char buf[FLT_MAX_10_EXP + 6];
 					snprintf(buf, sizeof(buf), "%.3f", f);
+					str = buf;
+					return true;
+				}
+			}
+			break;
+
+		case OSC_TYPE_FLOAT64:
+			{
+				double d;
+				if( GetDouble(d) )
+				{					
+					char buf[DBL_MAX_10_EXP + 6];
+					snprintf(buf, sizeof(buf), "%.3f", d);
 					str = buf;
 					return true;
 				}
@@ -878,10 +934,13 @@ bool OSCArgument::GetBool(bool &b) const
 	{
 		case OSC_TYPE_CHAR:
 		case OSC_TYPE_INT32:
+		case OSC_TYPE_MIDI:
+		case OSC_TYPE_RGBA32:
 			b = (GetInt32FromBuf(m_pBuf) != 0);
 			return true;
 
 		case OSC_TYPE_INT64:
+		case OSC_TYPE_TIME:
 			b = (GetInt64FromBuf(m_pBuf) != 0);
 			return true;
 
@@ -1078,6 +1137,18 @@ size_t OSCArgument::Get32BitAlignedSize(size_t size)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+void OSCArgument::Swap16(void *buf)
+{
+#ifndef __BIG_ENDIAN__
+	unsigned char *p = reinterpret_cast<unsigned char*>(buf);
+	uint16_t us =(static_cast<uint16_t>(p[1]) |
+			(static_cast<uint16_t>(p[0]) << 8));
+	memcpy(buf, &us, sizeof(us));
+#endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void OSCArgument::Swap32(void *buf)
 {
 #ifndef __BIG_ENDIAN__
@@ -1153,9 +1224,9 @@ bool OSCArgument::IsIntString(const char *buf)
 
 				default:
 					{
-						if(isdigit(*buf) == 0)
+						if(isdigit(static_cast<int>(*buf)) == 0)
 						{
-							if(isspace(*buf) != 0)
+							if(isspace(static_cast<int>(*buf)) != 0)
 							{
 								if(gotDigit || gotSign)
 									return gotDigit;	// trailing space, treat as string end
@@ -1212,9 +1283,9 @@ bool OSCArgument::IsFloatString(const char *buf)
 
 				default:
 					{
-						if(isdigit(*buf) == 0)
+						if(isdigit(static_cast<int>(*buf)) == 0)
 						{
-							if(isspace(*buf) != 0)
+							if(isspace(static_cast<int>(*buf)) != 0)
 							{
 								if(gotDigit || gotSign || gotDecimal)
 									return gotDigit;	// trailing space, treat as string end
@@ -1233,6 +1304,26 @@ bool OSCArgument::IsFloatString(const char *buf)
 	}
 
 	return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+int16_t OSCArgument::GetInt16FromBuf(const char *buf)
+{
+	int16_t s;
+	memcpy(&s, buf, sizeof(s));
+	Swap16(&s);
+	return s;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+uint16_t OSCArgument::GetUInt16FromBuf(const char *buf)
+{
+	uint16_t us;
+	memcpy(&us, buf, sizeof(us));
+	Swap16(&us);
+	return us;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1629,7 +1720,11 @@ void OSCPacketWriter::AddFloat64(const double &d)
 
 void OSCPacketWriter::AddRGBA(const OSCArgument::sRGBA &rgba)
 {
-	AddUInt32( rgba.toUInt() );
+	sArgInfo *arg = new sArgInfo;
+	arg->type = OSCArgument::OSC_TYPE_RGBA32;
+	arg->data.int32Data = static_cast<int32_t>( rgba.toUInt() );
+	arg->size = 4;
+	m_Q.push_back(arg);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1649,22 +1744,26 @@ void OSCPacketWriter::AddBlob(const char *data, size_t size)
 	if(bytes >= 0)
 	{
 		sArgInfo *arg = new sArgInfo;
-		arg->type = OSCArgument::OSC_TYPE_BLOB;	
-		arg->size = (4 + OSCArgument::Get32BitAlignedSize(size));
-		arg->data.binaryData = new char[arg->size];
-		memcpy(arg->data.binaryData, &bytes, 4);
-		OSCArgument::Swap32(arg->data.binaryData);
-		if(size != 0)
+		arg->type = OSCArgument::OSC_TYPE_BLOB;
+		size_t payloadBytes = OSCArgument::Get32BitAlignedSize(size);
+		arg->size = (4 + payloadBytes);
+		if(arg->size > payloadBytes)	// static analysis fix, account for wrapping on extremely large blob
 		{
-			if( data )
-				memcpy(&arg->data.binaryData[4], data, size);
-			else
-				memset(&arg->data.binaryData[4], 0, size);
+			arg->data.binaryData = new char[arg->size];
+			memcpy(arg->data.binaryData, &bytes, 4);
+			OSCArgument::Swap32(arg->data.binaryData);
+			if(size != 0)
+			{
+				if( data )
+					memcpy(&arg->data.binaryData[4], data, size);
+				else
+					memset(&arg->data.binaryData[4], 0, size);
+			}
+			size_t padding = (arg->size - 4 - size);
+			if(padding != 0)
+				memset(&arg->data.binaryData[arg->size-padding], 0, padding);
+			m_Q.push_back(arg);
 		}
-		size_t padding = (arg->size - 4 - size);
-		if(padding != 0)
-			memset(&arg->data.binaryData[arg->size-padding], 0, padding);
-		m_Q.push_back(arg);
 	}
 }
 
