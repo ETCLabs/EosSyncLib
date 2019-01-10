@@ -1946,54 +1946,97 @@ OSCPacketWriter* OSCPacketWriter::CreatePacketWriterForString(const char *str)
 {
 	if(str && str[0]==OSC_ADDR_SEPARATOR)
 	{
+		// support for quoted strings
+		//
+		// /osc=abc -> arg[0]=abc
+		// /osc=abc,def -> arg[0]=abc arg[1]=def
+		// /osc="abc,def" -> arg[0]=abc,def
+		// /osc="abc,","def," -> arg[0]=abc, arg[1]=def,
+		// /osc="""abc,def""" -> arg[0]="abc,def"
+		// /osc="""abc,""","""def,""" -> arg[0]="abc," arg[1]="def,"
+
 		// find args
-		const char *args = strrchr(str, '=');
+		const char *args = strchr(str, '=');
 		if( args )
 		{
 			// create packet with path
 			OSCPacketWriter *packet = new OSCPacketWriter( std::string(str,args-str) );
 
 			// append comma delimited args
+			bool quoted = false;
 			for(const char *i=++args; ;)
 			{
-				if(*i == 0)
+				if(*i == 0 || *i == ',')
 				{
-					if(i > args)
+					if( !quoted )
 					{
-						if( OSCArgument::IsIntString(args) )
-							packet->AddInt32( atoi(args) );
-						else if( OSCArgument::IsFloatString(args) )
-							packet->AddFloat32( static_cast<float>(atof(args)) );
-						else
-							packet->AddString(args);
+						size_t len = (i - args);
+						if(len != 0)
+						{
+							char *copy = new char[len + 1];
+
+							// convert quotes
+							// - remove single quotes
+							// - convert double quotes to single quote
+							size_t copy_len = 0;
+							bool force_string = false;
+							for(size_t j=0; j<len; ++j)
+							{
+								if(args[j] == '\"')
+								{
+									force_string = true;
+									if((j+1)<len && args[j+1]=='\"')
+									{
+										copy[copy_len++] = '\"';
+										++j;
+									}
+								}
+								else
+									copy[copy_len++] = args[j];
+							}
+
+							copy[copy_len] = 0;
+
+							if( force_string )
+							{
+								packet->AddString(copy);
+							}
+							else if(copy_len != 0)
+							{
+								if( OSCArgument::IsIntString(copy) )
+									packet->AddInt32( atoi(copy) );
+								else if( OSCArgument::IsFloatString(copy) )
+									packet->AddFloat32( static_cast<float>(atof(copy)) );
+								else
+									packet->AddString(copy);
+							}
+
+							delete[] copy;
+						}
 					}
 
-					// done
-					break;
-				}
-				else if(*i == ',')
-				{
-					size_t len = (i - args);
-					if(len != 0)
-					{
-						char *copy = new char[len + 1];
-						memcpy(copy, args, len);
-						copy[len] = 0;
+					if(*i == 0)
+						break;	// done
 
-						if( OSCArgument::IsIntString(copy) )
-							packet->AddInt32( atoi(copy) );
-						else if( OSCArgument::IsFloatString(copy) )
-							packet->AddFloat32( static_cast<float>(atof(copy)) );
-						else
-							packet->AddString(copy);
-
-						delete[] copy;
-					}
-
-					args = ++i;
+					if( quoted )
+						++i;
+					else
+						args = ++i;
 				}
 				else
+				{
+					if(*i == '\"')
+					{
+						if( !quoted )
+							quoted = true;
+						else if(*(i+1) == '\"')
+							++i;
+						else
+							quoted = false;
+					}
+
 					++i;
+				}
 			}
 
 			return packet;
