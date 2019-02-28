@@ -2100,7 +2100,7 @@ OSCPacketWriter* OSCPacketWriter::CreatePacketWriterForString(const char *str, s
 		char *copy = new char[size + 1];
 		memcpy(copy, str, size);
 		copy[size] = 0;
-		OSCPacketWriter *packet = CreatePacketWriterForString(str);
+		OSCPacketWriter *packet = CreatePacketWriterForString(copy);
 		delete[] copy;
 		return packet;
 	}
