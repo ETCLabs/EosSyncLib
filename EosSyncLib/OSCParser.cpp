@@ -2643,7 +2643,7 @@ bool OSCParser::ProcessBundle(OSCParserClient &client, char *buf, size_t size, b
 		else
 			client.OSCParserClient_Log("warning, empty bundle element");
 	}
-	while(size >= OSC_MIN_BUNDLE_SIZE);
+	while(size >= 4);
 
 	return processedAllBundleElements;
 }
