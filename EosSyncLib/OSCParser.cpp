@@ -855,7 +855,12 @@ bool OSCArgument::GetString(std::string &str) const
 				if( GetInt64(n) )
 				{
 					char buf[33];
-					snprintf(buf, sizeof(buf), "%lld", n);
+#ifdef __MINGW32__
+					const char* formatStr = "%I64d";
+#else
+					const char* formatStr = "%lld";
+#endif
+					snprintf(buf, sizeof(buf), formatStr, n);
 					str = buf;
 					return true;
 				}
