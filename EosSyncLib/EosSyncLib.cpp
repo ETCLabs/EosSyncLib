@@ -1631,6 +1631,9 @@ void EosSyncLib::Tick()
 		m_Data.Tick(*m_Tcp, *m_Osc, m_Log);
 		m_Osc->Tick(*m_Tcp);
 	}
+
+	if (m_Log.Size() > MAX_LOG_Q_SIZE_BEFORE_CLEAR) // Most likely we do not have the client flushing the log
+		m_Log.Clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
