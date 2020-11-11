@@ -1152,6 +1152,10 @@ void EosTargetList::InitializeAsDummy()
 
 EosSyncData::EosSyncData()
 {
+	for (unsigned int i = 0; i < EosTarget::EOS_TARGET_COUNT; i++)
+	{
+		m_Types.push_back(static_cast<EosTarget::EnumEosTargetType>(i));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1182,9 +1186,8 @@ void EosSyncData::Initialize()
 	Clear();
 
 	// add default targets	
-	for(unsigned int i=0; i<EosTarget::EOS_TARGET_COUNT; i++)
+	for(EosTarget::EnumEosTargetType type : m_Types)
 	{
-		EosTarget::EnumEosTargetType type = static_cast<EosTarget::EnumEosTargetType>(i);
 		if(type != EosTarget::EOS_TARGET_CUE)
 			m_ShowData[type][0] = new EosTargetList(type, /*listId*/0);
 	}
@@ -1540,6 +1543,13 @@ void EosSyncData::ClearDirty()
 	}
 }
 
+void EosSyncData::SetSubscribedTypes(const EosTarget::TYPE_LIST& list)
+{
+	Clear();
+	m_Status.SetValue(EosSyncStatus::EnumSyncStatus::SYNC_STATUS_UNINTIALIZED);
+	m_Types = list;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 EosSyncLib::EosSyncLib()
@@ -1559,8 +1569,12 @@ EosSyncLib::~EosSyncLib()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosSyncLib::Initialize(const char *ip, unsigned short port)
+bool EosSyncLib::Initialize(const char *ip, unsigned short port, const EosTarget::TYPE_LIST* list)
 {
+	if (list)
+	{
+		m_Data.SetSubscribedTypes(*list);
+	}
 	return m_Tcp->Initialize(m_Log,ip, port);
 }
 

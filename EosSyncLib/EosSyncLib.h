@@ -93,6 +93,8 @@ public:
 		EOS_TARGET_INVALID
 	};
 
+	typedef std::vector<EnumEosTargetType> TYPE_LIST;
+
 	struct sDecimalNumber
 	{
 		sDecimalNumber() : whole(0), decimal(0) {}
@@ -241,10 +243,12 @@ public:
 	virtual const SHOW_DATA& GetShowData() const {return m_ShowData;}
 	virtual const EosTargetList* GetTargetList(EosTarget::EnumEosTargetType type, int listId) const;
 	virtual void ClearDirty();
+	virtual void SetSubscribedTypes(const EosTarget::TYPE_LIST& list);
 
 private:
 	EosSyncStatus	m_Status;
 	SHOW_DATA		m_ShowData;
+	EosTarget::TYPE_LIST m_Types;
 
 	virtual void Initialize();
 	virtual void TickRunning(EosTcp &tcp, EosOsc &osc, EosLog &log);
@@ -268,7 +272,7 @@ public:
 	EosSyncLib();
 	virtual ~EosSyncLib();
 
-	virtual bool Initialize(const char *ip, unsigned short port);
+	virtual bool Initialize(const char *ip, unsigned short port, const EosTarget::TYPE_LIST* list = nullptr);
 	virtual void Shutdown();
 	virtual void Tick();
 	virtual bool IsRunning() const;
