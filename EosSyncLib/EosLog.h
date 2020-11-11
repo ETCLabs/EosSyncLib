@@ -60,6 +60,7 @@ public:
 	void AddLog(const EosLog &other) {AddQ(other.m_Q);}
 	void AddQ(const LOG_Q &q) {m_Q.insert(m_Q.end(),q.begin(),q.end());}
 	void Flush(LOG_Q &q);
+	size_t Size() const { return m_Q.size(); }
 
 private:
 	LOG_Q	m_Q;

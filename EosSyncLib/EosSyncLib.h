@@ -266,7 +266,9 @@ class EosSyncLib
 public:
 	enum EnumConstants
 	{
-		DEFAULT_PORT	= 3032
+		DEFAULT_PORT	= 3032,
+
+		MAX_LOG_Q_SIZE_BEFORE_CLEAR = 10000
 	};
 
 	EosSyncLib();
