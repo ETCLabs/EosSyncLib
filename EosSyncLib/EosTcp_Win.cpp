@@ -112,12 +112,12 @@ bool EosTcp_Win::Initialize(EosLog &log, const char *ip, unsigned short port)
 			log.AddError(text);
 		}
 	}
-	else
-	{
-		char text[256];
-		sprintf(text, "%s initialize failed, already initialized", GetLogPrefix(m_LogPrefix));
-		log.AddWarning(text);
-	}
+	//else
+	//{
+	//	char text[256];
+	//	sprintf(text, "%s initialize failed, already initialized", GetLogPrefix(m_LogPrefix));
+	//	log.AddWarning(text);
+	//}
 
 	return (m_Socket != INVALID_SOCKET);
 }
