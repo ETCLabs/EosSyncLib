@@ -28,6 +28,7 @@
 EosTcp_Win::EosTcp_Win()
 	: m_Socket(INVALID_SOCKET)
 	, m_RecvBuf(0)
+	, m_WSAStartup(false)
 {
 }
 
@@ -71,6 +72,7 @@ bool EosTcp_Win::Initialize(EosLog &log, const char *ip, unsigned short port)
 						log.AddInfo(text);
 						m_ConnectState = CONNECT_CONNECTED;
 						SetSocketBlocking(log, m_LogPrefix, m_Socket, true);
+						m_WSAStartup = true;
 					}
 					else if(WSAGetLastError() == WSAEWOULDBLOCK)
 					{
@@ -78,6 +80,7 @@ bool EosTcp_Win::Initialize(EosLog &log, const char *ip, unsigned short port)
 						sprintf(text, "%s connecting...", GetLogPrefix(m_LogPrefix));
 						log.AddInfo(text);
 						m_ConnectState = CONNECT_IN_PROGRESS;
+						m_WSAStartup = true;
 					}
 					else
 					{
@@ -86,8 +89,8 @@ bool EosTcp_Win::Initialize(EosLog &log, const char *ip, unsigned short port)
 						log.AddError(text);
 						shutdown(m_Socket, SD_BOTH);
 						closesocket(m_Socket);
-						m_Socket = INVALID_SOCKET;
-						WSACleanup();
+						m_Socket = INVALID_SOCKET;						
+						WSACleanup();						
 					}
 				}
 				else
@@ -161,7 +164,12 @@ void EosTcp_Win::Shutdown()
 		shutdown(m_Socket, SD_BOTH);
 		closesocket(m_Socket);
 		m_Socket = INVALID_SOCKET;
+	}
+
+	if (m_WSAStartup)
+	{
 		WSACleanup();
+		m_WSAStartup = false;
 	}
 
 	if( m_RecvBuf )
