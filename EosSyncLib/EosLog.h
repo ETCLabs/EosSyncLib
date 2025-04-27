@@ -30,40 +30,40 @@
 class EosLog
 {
 public:
-	enum EnumLogMsgType
-	{
-		LOG_MSG_TYPE_DEBUG,
-		LOG_MSG_TYPE_INFO,
-		LOG_MSG_TYPE_WARNING,
-		LOG_MSG_TYPE_ERROR,
-		LOG_MSG_TYPE_RECV,
-		LOG_MSG_TYPE_SEND
-	};
+  enum EnumLogMsgType
+  {
+    LOG_MSG_TYPE_DEBUG,
+    LOG_MSG_TYPE_INFO,
+    LOG_MSG_TYPE_WARNING,
+    LOG_MSG_TYPE_ERROR,
+    LOG_MSG_TYPE_RECV,
+    LOG_MSG_TYPE_SEND
+  };
 
-	struct sLogMsg
-	{
-		EnumLogMsgType	type;
-		time_t			timestamp;
-		std::string		text;
-	};
+  struct sLogMsg
+  {
+    EnumLogMsgType type;
+    time_t timestamp;
+    std::string text;
+  };
 
-	typedef std::vector<sLogMsg> LOG_Q;
+  typedef std::vector<sLogMsg> LOG_Q;
 
-	EosLog() {}
+  EosLog() {}
 
-	void Clear() {m_Q.clear();}
-	void Add(EnumLogMsgType type, const std::string &text);
-	void AddDebug(const std::string &text) {Add(LOG_MSG_TYPE_DEBUG,text);}
-	void AddInfo(const std::string &text) {Add(LOG_MSG_TYPE_INFO,text);}
-	void AddWarning(const std::string &text) {Add(LOG_MSG_TYPE_WARNING,text);}
-	void AddError(const std::string &text) {Add(LOG_MSG_TYPE_ERROR,text);}
-	void AddLog(const EosLog &other) {AddQ(other.m_Q);}
-	void AddQ(const LOG_Q &q) {m_Q.insert(m_Q.end(),q.begin(),q.end());}
-	void Flush(LOG_Q &q);
-	size_t Size() const { return m_Q.size(); }
+  void Clear() { m_Q.clear(); }
+  void Add(EnumLogMsgType type, const std::string &text);
+  void AddDebug(const std::string &text) { Add(LOG_MSG_TYPE_DEBUG, text); }
+  void AddInfo(const std::string &text) { Add(LOG_MSG_TYPE_INFO, text); }
+  void AddWarning(const std::string &text) { Add(LOG_MSG_TYPE_WARNING, text); }
+  void AddError(const std::string &text) { Add(LOG_MSG_TYPE_ERROR, text); }
+  void AddLog(const EosLog &other) { AddQ(other.m_Q); }
+  void AddQ(const LOG_Q &q) { m_Q.insert(m_Q.end(), q.begin(), q.end()); }
+  void Flush(LOG_Q &q);
+  size_t Size() const { return m_Q.size(); }
 
 private:
-	LOG_Q	m_Q;
+  LOG_Q m_Q;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

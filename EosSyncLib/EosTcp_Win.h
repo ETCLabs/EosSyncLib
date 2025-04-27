@@ -31,44 +31,42 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosTcp_Win
-	: public EosTcp
+class EosTcp_Win : public EosTcp
 {
 public:
-	EosTcp_Win();
-	virtual ~EosTcp_Win();
+  EosTcp_Win();
+  virtual ~EosTcp_Win();
 
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
-	virtual bool InitializeAccepted(EosLog &log, void *pSocket);
-	virtual void Shutdown();
-	virtual void Tick(EosLog &log);
-	virtual bool Send(EosLog &log, const char *data, size_t size);
-	virtual const char* Recv(EosLog &log, unsigned int timeoutMS, size_t &size);
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
+  virtual bool InitializeAccepted(EosLog &log, void *pSocket);
+  virtual void Shutdown();
+  virtual void Tick(EosLog &log);
+  virtual bool Send(EosLog &log, const char *data, size_t size);
+  virtual const char *Recv(EosLog &log, unsigned int timeoutMS, size_t &size);
 
-	static bool SetSocketBlocking(EosLog &log, const std::string &logPrefix, SOCKET socket, bool b);
+  static bool SetSocketBlocking(EosLog &log, const std::string &logPrefix, SOCKET socket, bool b);
 
 private:
-	SOCKET	m_Socket;
-	char	*m_RecvBuf;
-	bool	m_WSAStartup;
+  SOCKET m_Socket;
+  char *m_RecvBuf;
+  bool m_WSAStartup;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosTcpServer_Win
-	: public EosTcpServer
+class EosTcpServer_Win : public EosTcpServer
 {
 public:
-	EosTcpServer_Win();
-	virtual ~EosTcpServer_Win();
+  EosTcpServer_Win();
+  virtual ~EosTcpServer_Win();
 
-	virtual bool Initialize(EosLog &log, unsigned short port);
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
-	virtual void Shutdown();
-	virtual EosTcp* Recv(EosLog &log, unsigned int timeoutMS, void *addr, int *addrSize);
+  virtual bool Initialize(EosLog &log, unsigned short port);
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
+  virtual void Shutdown();
+  virtual EosTcp *Recv(EosLog &log, unsigned int timeoutMS, void *addr, int *addrSize);
 
 private:
-	SOCKET	m_Socket;
+  SOCKET m_Socket;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

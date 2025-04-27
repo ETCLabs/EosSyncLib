@@ -21,50 +21,50 @@
 #include "EosTimer.h"
 
 #ifdef WIN32
-	#include <Winsock2.h>
-	#include <Windows.h>
+#include <Winsock2.h>
+#include <Windows.h>
 #else
-	#include <mach/mach.h>
-	#include <mach/mach_time.h>
-	#include <unistd.h>
-	double EosTimer::sm_toMS = 0;
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+#include <unistd.h>
+double EosTimer::sm_toMS = 0;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
 EosTimer::EosTimer()
 {
-	Start();
+  Start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void EosTimer::Start()
 {
-	m_Timestamp = GetTimestamp();
+  m_Timestamp = GetTimestamp();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 unsigned int EosTimer::Restart()
 {
-	unsigned int elapsed = GetElapsed();
-	Start();
-	return elapsed;
+  unsigned int elapsed = GetElapsed();
+  Start();
+  return elapsed;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 unsigned int EosTimer::GetElapsed() const
 {
-	return (GetTimestamp() - m_Timestamp);
+  return (GetTimestamp() - m_Timestamp);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 bool EosTimer::GetExpired(unsigned int ms) const
 {
-	return (GetElapsed() >= ms);
+  return (GetElapsed() >= ms);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,13 +72,13 @@ bool EosTimer::GetExpired(unsigned int ms) const
 void EosTimer::Init()
 {
 #ifndef WIN32
-	if(sm_toMS == 0)
-	{
-		mach_timebase_info_data_t timeBase;
-		mach_timebase_info( &timeBase );
-		sm_toMS = timeBase.numer/static_cast<double>(timeBase.denom);
-		sm_toMS /= 1000000;
-	}
+  if (sm_toMS == 0)
+  {
+    mach_timebase_info_data_t timeBase;
+    mach_timebase_info(&timeBase);
+    sm_toMS = timeBase.numer / static_cast<double>(timeBase.denom);
+    sm_toMS /= 1000000;
+  }
 #endif
 }
 
@@ -87,9 +87,9 @@ void EosTimer::Init()
 unsigned int EosTimer::GetTimestamp()
 {
 #ifdef WIN32
-	return timeGetTime();
+  return timeGetTime();
 #else
-	return static_cast<unsigned int>(mach_absolute_time() * sm_toMS);
+  return static_cast<unsigned int>(mach_absolute_time() * sm_toMS);
 #endif
 }
 
@@ -98,9 +98,9 @@ unsigned int EosTimer::GetTimestamp()
 void EosTimer::SleepMS(unsigned int ms)
 {
 #ifdef WIN32
-	Sleep(ms);
+  Sleep(ms);
 #else
-	usleep(ms*1000);
+  usleep(ms * 1000);
 #endif
 }
 

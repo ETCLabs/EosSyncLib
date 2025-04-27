@@ -35,56 +35,59 @@ class EosTimer;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosOsc
-	: public OSCParserClient
+class EosOsc : public OSCParserClient
 {
 public:
-	struct sCommand
-	{
-		sCommand();
-		~sCommand();
-		void clear();
-		std::string	path;
-		OSCArgument	*args;
-		size_t		argCount;
-		char		*buf;
-	};
+  struct sCommand
+  {
+    sCommand();
+    ~sCommand();
+    void clear();
+    std::string path;
+    OSCArgument *args;
+    size_t argCount;
+    char *buf;
+  };
 
-	typedef std::queue<sCommand*> CMD_Q;
+  typedef std::queue<sCommand *> CMD_Q;
 
-	EosOsc(EosLog &log);
-	~EosOsc();
+  EosOsc(EosLog &log);
+  ~EosOsc();
 
-	bool Send(EosTcp &tcp, const OSCPacketWriter &packet, bool immediate);
-	void Recv(EosTcp &tcp, unsigned int timeoutMS, CMD_Q &cmdQ);
-	void Tick(EosTcp &tcp);
-	void OSCParserClient_Log(const std::string &message);
-	void OSCParserClient_Send(const char* /*buf*/, size_t /*size*/) {}
+  bool Send(EosTcp &tcp, const OSCPacketWriter &packet, bool immediate);
+  void Recv(EosTcp &tcp, unsigned int timeoutMS, CMD_Q &cmdQ);
+  void Tick(EosTcp &tcp);
+  void OSCParserClient_Log(const std::string &message);
+  void OSCParserClient_Send(const char * /*buf*/, size_t /*size*/) {}
 
 private:
-	struct sQueuedPacket
-	{
-		sQueuedPacket(char *Data, size_t Size) : data(Data), size(Size) {}
-		char	*data;
-		size_t	size;
-	};
+  struct sQueuedPacket
+  {
+    sQueuedPacket(char *Data, size_t Size)
+      : data(Data)
+      , size(Size)
+    {
+    }
+    char *data;
+    size_t size;
+  };
 
-	typedef std::vector<sQueuedPacket> Q;
+  typedef std::vector<sQueuedPacket> Q;
 
-	struct sInputBuffer
-	{
-		char	*data;
-		size_t	size;
-		size_t	capacity;
-	};
+  struct sInputBuffer
+  {
+    char *data;
+    size_t size;
+    size_t capacity;
+  };
 
-	OSCParser		m_Parser;
-	Q				m_Q;
-	EosLog			*m_pLog;
-	sQueuedPacket	m_SendPacket;
-	sInputBuffer	m_InputBuffer;
+  OSCParser m_Parser;
+  Q m_Q;
+  EosLog *m_pLog;
+  sQueuedPacket m_SendPacket;
+  sInputBuffer m_InputBuffer;
 
-	virtual bool SendPacket(EosTcp &tcp, char *data, size_t size);
+  virtual bool SendPacket(EosTcp &tcp, char *data, size_t size);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

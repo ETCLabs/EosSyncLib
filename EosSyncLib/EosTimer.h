@@ -27,23 +27,23 @@
 class EosTimer
 {
 public:
-	EosTimer();
-	virtual ~EosTimer() {}
-	
-	virtual void Start();
-	virtual unsigned int Restart();
-	virtual unsigned int GetElapsed() const;
-	virtual bool GetExpired(unsigned int ms) const;
-	
-	static void Init();
-	static unsigned int GetTimestamp();
-	static void SleepMS(unsigned int ms);
+  EosTimer();
+  virtual ~EosTimer() {}
+
+  virtual void Start();
+  virtual unsigned int Restart();
+  virtual unsigned int GetElapsed() const;
+  virtual bool GetExpired(unsigned int ms) const;
+
+  static void Init();
+  static unsigned int GetTimestamp();
+  static void SleepMS(unsigned int ms);
 
 private:
-	unsigned int	m_Timestamp;
+  unsigned int m_Timestamp;
 
 #ifndef WIN32
-	static double	sm_toMS;
+  static double sm_toMS;
 #endif
 };
 

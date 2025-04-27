@@ -33,21 +33,21 @@ class EosLog;
 class EosUdpIn
 {
 public:
-	EosUdpIn();
-	virtual ~EosUdpIn();
+  EosUdpIn();
+  virtual ~EosUdpIn();
 
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, const char* multicastIP = nullptr) = 0;
-	virtual bool IsInitialized() const = 0;
-	virtual void Shutdown() = 0;
-	virtual const char* RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize) = 0;
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIP = nullptr) = 0;
+  virtual bool IsInitialized() const = 0;
+  virtual void Shutdown() = 0;
+  virtual const char *RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize) = 0;
 
-	static EosUdpIn* Create();
-	static void SetLogPrefix(const char *name, const char *ip, unsigned short port, std::string &logPrefix);
-	static const char* GetLogPrefix(const std::string &logPrefix);
+  static EosUdpIn *Create();
+  static void SetLogPrefix(const char *name, const char *ip, unsigned short port, std::string &logPrefix);
+  static const char *GetLogPrefix(const std::string &logPrefix);
 
 protected:
-	char		*m_RecvBuf;
-	std::string	m_LogPrefix;
+  char *m_RecvBuf;
+  std::string m_LogPrefix;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,18 +55,18 @@ protected:
 class EosUdpOut
 {
 public:
-	EosUdpOut() {}
-	virtual ~EosUdpOut() {}
+  EosUdpOut() {}
+  virtual ~EosUdpOut() {}
 
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, bool multicast = false) = 0;
-	virtual bool IsInitialized() const = 0;
-	virtual void Shutdown() = 0;
-	virtual bool SendPacket(EosLog &log, const char *buf, int len) = 0;
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, bool multicast = false) = 0;
+  virtual bool IsInitialized() const = 0;
+  virtual void Shutdown() = 0;
+  virtual bool SendPacket(EosLog &log, const char *buf, int len) = 0;
 
-	static EosUdpOut* Create();
+  static EosUdpOut *Create();
 
 protected:
-	std::string	m_LogPrefix;
+  std::string m_LogPrefix;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

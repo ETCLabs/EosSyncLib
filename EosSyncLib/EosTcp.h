@@ -32,31 +32,31 @@ class EosLog;
 class EosTcp
 {
 public:
-	enum EnumConnectState
-	{
-		CONNECT_NOT_CONNECTED,
-		CONNECT_IN_PROGRESS,
-		CONNECT_CONNECTED
-	};
+  enum EnumConnectState
+  {
+    CONNECT_NOT_CONNECTED,
+    CONNECT_IN_PROGRESS,
+    CONNECT_CONNECTED
+  };
 
-	EosTcp();
-	virtual ~EosTcp() {}
+  EosTcp();
+  virtual ~EosTcp() {}
 
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port) = 0;
-	virtual bool InitializeAccepted(EosLog &log, void *pSocket) = 0;
-	virtual void Shutdown() = 0;
-	virtual void Tick(EosLog &log) = 0;
-	virtual EnumConnectState GetConnectState() const {return m_ConnectState;}
-	virtual bool Send(EosLog &log, const char *data, size_t size) = 0;
-	virtual const char* Recv(EosLog &log, unsigned int timeoutMS, size_t &size) = 0;
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port) = 0;
+  virtual bool InitializeAccepted(EosLog &log, void *pSocket) = 0;
+  virtual void Shutdown() = 0;
+  virtual void Tick(EosLog &log) = 0;
+  virtual EnumConnectState GetConnectState() const { return m_ConnectState; }
+  virtual bool Send(EosLog &log, const char *data, size_t size) = 0;
+  virtual const char *Recv(EosLog &log, unsigned int timeoutMS, size_t &size) = 0;
 
-	static EosTcp* Create();
-	static void SetLogPrefix(const char *name, const char *ip, unsigned short port, std::string &logPrefix);
-	static const char* GetLogPrefix(const std::string &logPrefix);
+  static EosTcp *Create();
+  static void SetLogPrefix(const char *name, const char *ip, unsigned short port, std::string &logPrefix);
+  static const char *GetLogPrefix(const std::string &logPrefix);
 
 protected:
-	EnumConnectState	m_ConnectState;
-	std::string			m_LogPrefix;
+  EnumConnectState m_ConnectState;
+  std::string m_LogPrefix;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,20 +64,20 @@ protected:
 class EosTcpServer
 {
 public:
-	EosTcpServer();
-	virtual ~EosTcpServer() {}
+  EosTcpServer();
+  virtual ~EosTcpServer() {}
 
-	virtual bool Initialize(EosLog &log, unsigned short port) = 0;
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port) = 0;
-	virtual void Shutdown() = 0;
-	virtual bool GetListening() const {return m_Listening;}
-	virtual EosTcp* Recv(EosLog &log, unsigned int timeoutMS, void *addr, int *addrSize) = 0;
+  virtual bool Initialize(EosLog &log, unsigned short port) = 0;
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port) = 0;
+  virtual void Shutdown() = 0;
+  virtual bool GetListening() const { return m_Listening; }
+  virtual EosTcp *Recv(EosLog &log, unsigned int timeoutMS, void *addr, int *addrSize) = 0;
 
-	static EosTcpServer* Create();
+  static EosTcpServer *Create();
 
 protected:
-	bool		m_Listening;
-	std::string	m_LogPrefix;
+  bool m_Listening;
+  std::string m_LogPrefix;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -22,15 +22,15 @@
 #include "EosLog.h"
 
 #ifdef WIN32
-	#include "EosTcp_Win.h"
+#include "EosTcp_Win.h"
 #else
-	#include "EosTcp_Mac.h"
+#include "EosTcp_Mac.h"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
 EosTcp::EosTcp()
-	: m_ConnectState(CONNECT_NOT_CONNECTED)
+  : m_ConnectState(CONNECT_NOT_CONNECTED)
 {
 }
 
@@ -38,59 +38,59 @@ EosTcp::EosTcp()
 
 void EosTcp::SetLogPrefix(const char *name, const char *ip, unsigned short port, std::string &logPrefix)
 {
-	if( ip )
-		logPrefix = ip;
-	else
-		logPrefix.clear();
+  if (ip)
+    logPrefix = ip;
+  else
+    logPrefix.clear();
 
-	size_t maxLen = strlen("255.255.255.255");
-	if(logPrefix.size() > maxLen)
-		logPrefix.resize(maxLen);
+  size_t maxLen = strlen("255.255.255.255");
+  if (logPrefix.size() > maxLen)
+    logPrefix.resize(maxLen);
 
-	if( name )
-	{
-		logPrefix.insert(0, " ");
-		logPrefix.insert(0, name);
-	}
+  if (name)
+  {
+    logPrefix.insert(0, " ");
+    logPrefix.insert(0, name);
+  }
 
-	char buf[34];
-	sprintf(buf, ":%u", port);
-	logPrefix.append(buf);
+  char buf[34];
+  sprintf(buf, ":%u", port);
+  logPrefix.append(buf);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const char* EosTcp::GetLogPrefix(const std::string &logPrefix)
+const char *EosTcp::GetLogPrefix(const std::string &logPrefix)
 {
-	return (logPrefix.c_str() ? logPrefix.c_str() : "");
+  return (logPrefix.c_str() ? logPrefix.c_str() : "");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-EosTcp* EosTcp::Create()
+EosTcp *EosTcp::Create()
 {
 #ifdef WIN32
-	return (new EosTcp_Win());
+  return (new EosTcp_Win());
 #else
-	return (new EosTcp_Mac());
+  return (new EosTcp_Mac());
 #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 EosTcpServer::EosTcpServer()
-	: m_Listening(false)
+  : m_Listening(false)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-EosTcpServer* EosTcpServer::Create()
+EosTcpServer *EosTcpServer::Create()
 {
 #ifdef WIN32
-	return (new EosTcpServer_Win());
+  return (new EosTcpServer_Win());
 #else
-	return (new EosTcpServer_Mac());
+  return (new EosTcpServer_Mac());
 #endif
 }
 

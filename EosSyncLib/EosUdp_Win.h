@@ -32,39 +32,37 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosUdpIn_Win
-	: public EosUdpIn
+class EosUdpIn_Win : public EosUdpIn
 {
 public:
-	EosUdpIn_Win();
-	virtual ~EosUdpIn_Win();
+  EosUdpIn_Win();
+  virtual ~EosUdpIn_Win();
 
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIP = nullptr);
-	virtual bool IsInitialized() const {return (m_Socket!=-1);}
-	virtual void Shutdown();
-	virtual const char* RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize);
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIP = nullptr);
+  virtual bool IsInitialized() const { return (m_Socket != -1); }
+  virtual void Shutdown();
+  virtual const char *RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize);
 
 private:
-	SOCKET	m_Socket;
+  SOCKET m_Socket;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosUdpOut_Win
-	: public EosUdpOut
+class EosUdpOut_Win : public EosUdpOut
 {
 public:
-	EosUdpOut_Win();
-	virtual ~EosUdpOut_Win();
+  EosUdpOut_Win();
+  virtual ~EosUdpOut_Win();
 
-	virtual bool Initialize(EosLog& log, const char* ip, unsigned short port, bool multicast = false);
-	virtual bool IsInitialized() const {return (m_Socket!=-1);}
-	virtual void Shutdown();
-	virtual bool SendPacket(EosLog &log, const char *buf, int len);
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, bool multicast = false);
+  virtual bool IsInitialized() const { return (m_Socket != -1); }
+  virtual void Shutdown();
+  virtual bool SendPacket(EosLog &log, const char *buf, int len);
 
 private:
-	SOCKET		m_Socket;
-	sockaddr_in	m_Addr;
+  SOCKET m_Socket;
+  sockaddr_in m_Addr;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

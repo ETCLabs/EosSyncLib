@@ -21,75 +21,75 @@
 #include "EosUdp.h"
 
 #ifdef WIN32
-	#include "EosUdp_Win.h"
+#include "EosUdp_Win.h"
 #else
-	#include "EosUdp_Mac.h"
+#include "EosUdp_Mac.h"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
 EosUdpIn::EosUdpIn()
 {
-	m_RecvBuf = new char[EOS_UDP_RECV_BUF_LEN];
+  m_RecvBuf = new char[EOS_UDP_RECV_BUF_LEN];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 EosUdpIn::~EosUdpIn()
 {
-	delete[] m_RecvBuf;
+  delete[] m_RecvBuf;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void EosUdpIn::SetLogPrefix(const char *name, const char *ip, unsigned short port, std::string &logPrefix)
 {
-	if( ip )
-		logPrefix = ip;
-	else
-		logPrefix.clear();
+  if (ip)
+    logPrefix = ip;
+  else
+    logPrefix.clear();
 
-	size_t maxLen = strlen("255.255.255.255");
-	if(logPrefix.size() > maxLen)
-		logPrefix.resize(maxLen);
+  size_t maxLen = strlen("255.255.255.255");
+  if (logPrefix.size() > maxLen)
+    logPrefix.resize(maxLen);
 
-	if( name )
-	{
-		logPrefix.insert(0, " ");
-		logPrefix.insert(0, name);
-	}
+  if (name)
+  {
+    logPrefix.insert(0, " ");
+    logPrefix.insert(0, name);
+  }
 
-	char buf[34];
-	sprintf(buf, ":%u", port);
-	logPrefix.append(buf);
+  char buf[34];
+  sprintf(buf, ":%u", port);
+  logPrefix.append(buf);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const char* EosUdpIn::GetLogPrefix(const std::string &logPrefix)
+const char *EosUdpIn::GetLogPrefix(const std::string &logPrefix)
 {
-	return (logPrefix.c_str() ? logPrefix.c_str() : "");
+  return (logPrefix.c_str() ? logPrefix.c_str() : "");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-EosUdpIn* EosUdpIn::Create()
+EosUdpIn *EosUdpIn::Create()
 {
 #ifdef WIN32
-	return (new EosUdpIn_Win());
+  return (new EosUdpIn_Win());
 #else
-	return (new EosUdpIn_Mac());
+  return (new EosUdpIn_Mac());
 #endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-EosUdpOut* EosUdpOut::Create()
+EosUdpOut *EosUdpOut::Create()
 {
 #ifdef WIN32
-	return (new EosUdpOut_Win());
+  return (new EosUdpOut_Win());
 #else
-	return (new EosUdpOut_Mac());
+  return (new EosUdpOut_Mac());
 #endif
 }
 
