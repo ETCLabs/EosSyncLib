@@ -40,7 +40,7 @@ EosUdpIn_Mac::~EosUdpIn_Mac()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
+bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIP /*= nullptr*/)
 {
 	if(	!IsInitialized() )
 	{
@@ -67,6 +67,20 @@ bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 				int result = bind(m_Socket, reinterpret_cast<sockaddr*>(&addr), static_cast<socklen_t>(sizeof(addr)));
 				if(result != -1)
 				{
+          if (multicastIP)
+          {
+            ip_mreq imr;
+            memset(&imr, 0, sizeof(imr));
+            imr.imr_multiaddr.s_addr = inet_addr(multicastIP);
+            imr.imr_interface.s_addr = htonl(INADDR_ANY);
+            if(setsockopt(m_Socket,IPPROTO_IP,IP_ADD_MEMBERSHIP, reinterpret_cast<const char*>(&imr), sizeof(imr)) == -1)
+            {
+              char text[256];
+              sprintf(text, "%s setsockopt(IP_ADD_MEMBERSHIP) failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+              log.AddWarning(text);
+            }
+          }
+          
 					char text[256];
 					sprintf(text, "%s socket intialized", GetLogPrefix(m_LogPrefix));
 					log.AddInfo(text);
@@ -189,7 +203,7 @@ EosUdpOut_Mac::~EosUdpOut_Mac()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
+bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, bool multicast /*= false*/)
 {
 	if(	!IsInitialized() )
 	{
@@ -200,13 +214,28 @@ bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
 			m_Socket = socket(AF_INET, SOCK_DGRAM, 0);
 			if(m_Socket != -1)
 			{
-				int optval = 1;
-				if(setsockopt(m_Socket,SOL_SOCKET,SO_BROADCAST,(const char*)&optval,sizeof(optval)) == -1)
-				{
-					char text[256];
-					sprintf(text, "%s setsockopt(SO_BROADCAST) failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
-					log.AddWarning(text);
-				}
+        if (multicast)
+        {
+          in_addr addr;
+          memset(&addr, 0, sizeof(addr));
+          addr.s_addr = INADDR_ANY;
+          if (setsockopt(m_Socket,IPPROTO_IP,IP_MULTICAST_IF,reinterpret_cast<const char *>(&addr),sizeof(addr)) == -1)
+          {
+            char text[256];
+            sprintf(text, "%s setsockopt(IP_MULTICAST_IF) failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
+            log.AddWarning(text);
+          }
+        }
+        else
+        {
+          int optval = 1;
+          if(setsockopt(m_Socket,SOL_SOCKET,SO_BROADCAST,reinterpret_cast<const char *>(&optval),sizeof(optval)) == -1)
+          {
+            char text[256];
+            sprintf(text, "%s setsockopt(SO_BROADCAST) failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
+            log.AddWarning(text);
+          }
+        }
 				
 				memset(&m_Addr, 0, sizeof(m_Addr));
 				m_Addr.sin_family = AF_INET;
