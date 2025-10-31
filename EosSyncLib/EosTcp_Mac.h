@@ -28,43 +28,41 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosTcp_Mac
-	: public EosTcp
+class EosTcp_Mac : public EosTcp
 {
 public:
-	EosTcp_Mac();
-	virtual ~EosTcp_Mac();
+  EosTcp_Mac();
+  virtual ~EosTcp_Mac();
 
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
-	virtual bool InitializeAccepted(EosLog &log, void *pSocket);
-	virtual void Shutdown();
-	virtual void Tick(EosLog &log);
-	virtual bool Send(EosLog &log, const char *data, size_t size);
-	virtual const char* Recv(EosLog &log, unsigned int timeoutMS, size_t &size);
-	
-	static bool SetSocketBlocking(EosLog &log, const std::string &logPrefix, int socket, bool b);
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
+  virtual bool InitializeAccepted(EosLog &log, void *pSocket);
+  virtual void Shutdown();
+  virtual void Tick(EosLog &log);
+  virtual bool Send(EosLog &log, const char *data, size_t size);
+  virtual const char *Recv(EosLog &log, unsigned int timeoutMS, size_t &size);
+
+  static bool SetSocketBlocking(EosLog &log, const std::string &logPrefix, int socket, bool b);
 
 private:
-	int		m_Socket;
-	char	*m_RecvBuf;
+  int m_Socket;
+  char *m_RecvBuf;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosTcpServer_Mac
-	: public EosTcpServer
+class EosTcpServer_Mac : public EosTcpServer
 {
 public:
-	EosTcpServer_Mac();
-	virtual ~EosTcpServer_Mac();
+  EosTcpServer_Mac();
+  virtual ~EosTcpServer_Mac();
 
-	virtual bool Initialize(EosLog &log, unsigned short port);
-	virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
-	virtual void Shutdown();
-	virtual EosTcp* Recv(EosLog &log, unsigned int timeoutMS, void *addr, int *addrSize);
+  virtual bool Initialize(EosLog &log, unsigned short port);
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port);
+  virtual void Shutdown();
+  virtual EosTcp *Recv(EosLog &log, unsigned int timeoutMS, void *addr, int *addrSize);
 
 private:
-	int	m_Socket;
+  int m_Socket;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 EosUdpIn_Mac::EosUdpIn_Mac()
-	: m_Socket(-1)
+  : m_Socket(-1)
 {
 }
 
@@ -35,162 +35,162 @@ EosUdpIn_Mac::EosUdpIn_Mac()
 
 EosUdpIn_Mac::~EosUdpIn_Mac()
 {
-	Shutdown();
+  Shutdown();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIP /*= nullptr*/)
 {
-	if(	!IsInitialized() )
-	{
-		SetLogPrefix("udp input", ip, port, m_LogPrefix);
-	
-		if( ip )
-		{
-			m_Socket = socket(AF_INET, SOCK_DGRAM, 0);
-			if(m_Socket != -1)
-			{
-				int optval = 1;
-				if(setsockopt(m_Socket,SOL_SOCKET,SO_REUSEADDR,(const char*)&optval,sizeof(optval)) == -1)
-				{
-					char text[256];
-					sprintf(text, "%s setsockopt(SO_REUSEADDR) failed with error %d", GetLogPrefix(m_LogPrefix), errno);
-					log.AddWarning(text);
-				}
-				
-				sockaddr_in addr;
-				memset(&addr, 0, sizeof(addr));
-				addr.sin_family = AF_INET;
-				addr.sin_addr.s_addr = inet_addr(ip);
-				addr.sin_port = htons(port);
-				int result = bind(m_Socket, reinterpret_cast<sockaddr*>(&addr), static_cast<socklen_t>(sizeof(addr)));
-				if(result != -1)
-				{
+  if (!IsInitialized())
+  {
+    SetLogPrefix("udp input", ip, port, m_LogPrefix);
+
+    if (ip)
+    {
+      m_Socket = socket(AF_INET, SOCK_DGRAM, 0);
+      if (m_Socket != -1)
+      {
+        int optval = 1;
+        if (setsockopt(m_Socket, SOL_SOCKET, SO_REUSEADDR, (const char *)&optval, sizeof(optval)) == -1)
+        {
+          char text[256];
+          sprintf(text, "%s setsockopt(SO_REUSEADDR) failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+          log.AddWarning(text);
+        }
+
+        sockaddr_in addr;
+        memset(&addr, 0, sizeof(addr));
+        addr.sin_family = AF_INET;
+        addr.sin_addr.s_addr = inet_addr(ip);
+        addr.sin_port = htons(port);
+        int result = bind(m_Socket, reinterpret_cast<sockaddr *>(&addr), static_cast<socklen_t>(sizeof(addr)));
+        if (result != -1)
+        {
           if (multicastIP)
           {
             ip_mreq imr;
             memset(&imr, 0, sizeof(imr));
             imr.imr_multiaddr.s_addr = inet_addr(multicastIP);
             imr.imr_interface.s_addr = htonl(INADDR_ANY);
-            if(setsockopt(m_Socket,IPPROTO_IP,IP_ADD_MEMBERSHIP, reinterpret_cast<const char*>(&imr), sizeof(imr)) == -1)
+            if (setsockopt(m_Socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, reinterpret_cast<const char *>(&imr), sizeof(imr)) == -1)
             {
               char text[256];
               sprintf(text, "%s setsockopt(IP_ADD_MEMBERSHIP) failed with error %d", GetLogPrefix(m_LogPrefix), errno);
               log.AddWarning(text);
             }
           }
-          
-					char text[256];
-					sprintf(text, "%s socket intialized", GetLogPrefix(m_LogPrefix));
-					log.AddInfo(text);
-				}
-				else
-				{
-					char text[256];
-					sprintf(text, "%s bind failed with error %d", GetLogPrefix(m_LogPrefix), errno);
-					log.AddError(text);
-					close(m_Socket);
-					m_Socket = -1;
-				}
-			}
-			else
-			{
-				char text[256];
-				sprintf(text, "%s socket failed with error %d", GetLogPrefix(m_LogPrefix), errno);
-				log.AddError(text);
-			}
-		}
-		else
-		{
-			char text[256];
-			sprintf(text, "%s initialize failed, invalid arguments", GetLogPrefix(m_LogPrefix));
-			log.AddError(text);
-		}
-	}
-	else
-	{
-		char text[256];
-		sprintf(text, "%s initialize failed, already initialized", GetLogPrefix(m_LogPrefix));
-		log.AddWarning(text);
-	}
 
-	return IsInitialized();
+          char text[256];
+          sprintf(text, "%s socket intialized", GetLogPrefix(m_LogPrefix));
+          log.AddInfo(text);
+        }
+        else
+        {
+          char text[256];
+          sprintf(text, "%s bind failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+          log.AddError(text);
+          close(m_Socket);
+          m_Socket = -1;
+        }
+      }
+      else
+      {
+        char text[256];
+        sprintf(text, "%s socket failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+        log.AddError(text);
+      }
+    }
+    else
+    {
+      char text[256];
+      sprintf(text, "%s initialize failed, invalid arguments", GetLogPrefix(m_LogPrefix));
+      log.AddError(text);
+    }
+  }
+  else
+  {
+    char text[256];
+    sprintf(text, "%s initialize failed, already initialized", GetLogPrefix(m_LogPrefix));
+    log.AddWarning(text);
+  }
+
+  return IsInitialized();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void EosUdpIn_Mac::Shutdown()
 {
-	if( IsInitialized() )
-	{
-		close(m_Socket);
-		m_Socket = -1;
-	}
+  if (IsInitialized())
+  {
+    close(m_Socket);
+    m_Socket = -1;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const char* EosUdpIn_Mac::RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize)
+const char *EosUdpIn_Mac::RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize)
 {
-	if( IsInitialized() )
-	{
-		for(;;)
-		{
-			fd_set readfds;
-			FD_ZERO(&readfds);
-			FD_SET(m_Socket, &readfds);
+  if (IsInitialized())
+  {
+    for (;;)
+    {
+      fd_set readfds;
+      FD_ZERO(&readfds);
+      FD_SET(m_Socket, &readfds);
 
-			timeval timeout;
-			timeout.tv_sec = timeoutMS/1000;
-			timeout.tv_usec = ((timeoutMS - timeoutMS/1000) * 1000);
+      timeval timeout;
+      timeout.tv_sec = timeoutMS / 1000;
+      timeout.tv_usec = ((timeoutMS - timeoutMS / 1000) * 1000);
 
-			int result = select(m_Socket+1, &readfds, 0, 0, &timeout);
-			if(result > 0)
-			{
-				socklen_t fromSize = (addrSize ? static_cast<socklen_t>(*addrSize) : 0);
-				len = static_cast<int>( recvfrom(m_Socket,m_RecvBuf,EOS_UDP_RECV_BUF_LEN,0,static_cast<sockaddr*>(addr),(addr && addrSize) ? (&fromSize) : 0) );
-				if(len == -1)
-				{
-					char text[256];
-					sprintf(text, "%s recvfrom failed with error %d", GetLogPrefix(m_LogPrefix), errno);
-					log.AddError(text);
-				}
-				else if(len < 1)
-				{
-					char text[256];
-					sprintf(text, "%s recvfrom failed, received %d bytes", GetLogPrefix(m_LogPrefix), len);
-					log.AddWarning(text);
-				}
-				else
-					return m_RecvBuf;
-			}
-			else if(result < 0)
-			{
-				char text[256];
-				sprintf(text, "%s select failed with error %d", GetLogPrefix(m_LogPrefix), errno);
-				log.AddError(text);
-				break;
-			}
+      int result = select(m_Socket + 1, &readfds, 0, 0, &timeout);
+      if (result > 0)
+      {
+        socklen_t fromSize = (addrSize ? static_cast<socklen_t>(*addrSize) : 0);
+        len = static_cast<int>(recvfrom(m_Socket, m_RecvBuf, EOS_UDP_RECV_BUF_LEN, 0, static_cast<sockaddr *>(addr), (addr && addrSize) ? (&fromSize) : 0));
+        if (len == -1)
+        {
+          char text[256];
+          sprintf(text, "%s recvfrom failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+          log.AddError(text);
+        }
+        else if (len < 1)
+        {
+          char text[256];
+          sprintf(text, "%s recvfrom failed, received %d bytes", GetLogPrefix(m_LogPrefix), len);
+          log.AddWarning(text);
+        }
+        else
+          return m_RecvBuf;
+      }
+      else if (result < 0)
+      {
+        char text[256];
+        sprintf(text, "%s select failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+        log.AddError(text);
+        break;
+      }
 
-			if(retryCount-- == 0)
-				break;
-		}
-	}
-	else
-	{
-		char text[256];
-		sprintf(text, "%s RecvPacket failed, not initialized", GetLogPrefix(m_LogPrefix));
-		log.AddError(text);
-	}
+      if (retryCount-- == 0)
+        break;
+    }
+  }
+  else
+  {
+    char text[256];
+    sprintf(text, "%s RecvPacket failed, not initialized", GetLogPrefix(m_LogPrefix));
+    log.AddError(text);
+  }
 
-	return 0;
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 EosUdpOut_Mac::EosUdpOut_Mac()
-	: m_Socket(-1)
+  : m_Socket(-1)
 {
 }
 
@@ -198,28 +198,28 @@ EosUdpOut_Mac::EosUdpOut_Mac()
 
 EosUdpOut_Mac::~EosUdpOut_Mac()
 {
-	Shutdown();
+  Shutdown();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, bool multicast /*= false*/)
 {
-	if(	!IsInitialized() )
-	{
-		EosUdpIn::SetLogPrefix("udp output", ip, port, m_LogPrefix);
-	
-		if( ip )
-		{
-			m_Socket = socket(AF_INET, SOCK_DGRAM, 0);
-			if(m_Socket != -1)
-			{
+  if (!IsInitialized())
+  {
+    EosUdpIn::SetLogPrefix("udp output", ip, port, m_LogPrefix);
+
+    if (ip)
+    {
+      m_Socket = socket(AF_INET, SOCK_DGRAM, 0);
+      if (m_Socket != -1)
+      {
         if (multicast)
         {
           in_addr addr;
           memset(&addr, 0, sizeof(addr));
           addr.s_addr = INADDR_ANY;
-          if (setsockopt(m_Socket,IPPROTO_IP,IP_MULTICAST_IF,reinterpret_cast<const char *>(&addr),sizeof(addr)) == -1)
+          if (setsockopt(m_Socket, IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char *>(&addr), sizeof(addr)) == -1)
           {
             char text[256];
             sprintf(text, "%s setsockopt(IP_MULTICAST_IF) failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
@@ -229,91 +229,91 @@ bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port,
         else
         {
           int optval = 1;
-          if(setsockopt(m_Socket,SOL_SOCKET,SO_BROADCAST,reinterpret_cast<const char *>(&optval),sizeof(optval)) == -1)
+          if (setsockopt(m_Socket, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<const char *>(&optval), sizeof(optval)) == -1)
           {
             char text[256];
             sprintf(text, "%s setsockopt(SO_BROADCAST) failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
             log.AddWarning(text);
           }
         }
-				
-				memset(&m_Addr, 0, sizeof(m_Addr));
-				m_Addr.sin_family = AF_INET;
-				m_Addr.sin_addr.s_addr = inet_addr(ip);
-				m_Addr.sin_port = htons(port);
-				
-				char text[256];
-				sprintf(text, "%s socket intialized", EosUdpIn::GetLogPrefix(m_LogPrefix));
-				log.AddInfo(text);
-			}
-			else
-			{
-				char text[256];
-				sprintf(text, "%s socket failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
-				log.AddError(text);
-			}
-		}
-		else
-		{
-			char text[256];
-			sprintf(text, "%s initialize failed, invalid arguments", EosUdpIn::GetLogPrefix(m_LogPrefix));
-			log.AddError(text);
-		}
-	}
-	else
-	{
-		char text[256];
-		sprintf(text, "%s initialize failed, already initialized", EosUdpIn::GetLogPrefix(m_LogPrefix));
-		log.AddWarning(text);
-	}
 
-	return IsInitialized();
+        memset(&m_Addr, 0, sizeof(m_Addr));
+        m_Addr.sin_family = AF_INET;
+        m_Addr.sin_addr.s_addr = inet_addr(ip);
+        m_Addr.sin_port = htons(port);
+
+        char text[256];
+        sprintf(text, "%s socket intialized", EosUdpIn::GetLogPrefix(m_LogPrefix));
+        log.AddInfo(text);
+      }
+      else
+      {
+        char text[256];
+        sprintf(text, "%s socket failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
+        log.AddError(text);
+      }
+    }
+    else
+    {
+      char text[256];
+      sprintf(text, "%s initialize failed, invalid arguments", EosUdpIn::GetLogPrefix(m_LogPrefix));
+      log.AddError(text);
+    }
+  }
+  else
+  {
+    char text[256];
+    sprintf(text, "%s initialize failed, already initialized", EosUdpIn::GetLogPrefix(m_LogPrefix));
+    log.AddWarning(text);
+  }
+
+  return IsInitialized();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void EosUdpOut_Mac::Shutdown()
 {
-	if( IsInitialized() )
-	{
-		close(m_Socket);
-		m_Socket = -1;
-	}
+  if (IsInitialized())
+  {
+    close(m_Socket);
+    m_Socket = -1;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 bool EosUdpOut_Mac::SendPacket(EosLog &log, const char *buf, int len)
 {
-	if( IsInitialized()  )
-	{
-		if(buf && len>0)
-		{
-			int bytesSent = static_cast<int>( sendto(m_Socket,buf,len,0,reinterpret_cast<sockaddr*>(&m_Addr),static_cast<socklen_t>(sizeof(m_Addr))) );
-			if(bytesSent == -1)
-			{
-				char text[256];
-				sprintf(text, "%s sendto failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
-				log.AddError(text);
-			}
-			else if(bytesSent != len)
-			{
-				char text[256];
-				sprintf(text, "%s sendto failed, sent %d of %d bytes", EosUdpIn::GetLogPrefix(m_LogPrefix), bytesSent, len);
-				log.AddError(text);
-			}
-			else
-				return true;
-		}
-	}
-	else
-	{
-		char text[256];
-		sprintf(text, "%s SendPacket failed, not initialized", EosUdpIn::GetLogPrefix(m_LogPrefix));
-		log.AddError(text);
-	}
+  if (IsInitialized())
+  {
+    if (buf && len > 0)
+    {
+      int bytesSent = static_cast<int>(sendto(m_Socket, buf, len, 0, reinterpret_cast<sockaddr *>(&m_Addr), static_cast<socklen_t>(sizeof(m_Addr))));
+      if (bytesSent == -1)
+      {
+        char text[256];
+        sprintf(text, "%s sendto failed with error %d", EosUdpIn::GetLogPrefix(m_LogPrefix), errno);
+        log.AddError(text);
+      }
+      else if (bytesSent != len)
+      {
+        char text[256];
+        sprintf(text, "%s sendto failed, sent %d of %d bytes", EosUdpIn::GetLogPrefix(m_LogPrefix), bytesSent, len);
+        log.AddError(text);
+      }
+      else
+        return true;
+    }
+  }
+  else
+  {
+    char text[256];
+    sprintf(text, "%s SendPacket failed, not initialized", EosUdpIn::GetLogPrefix(m_LogPrefix));
+    log.AddError(text);
+  }
 
-	return false;
+  return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
