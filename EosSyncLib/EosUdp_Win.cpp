@@ -37,7 +37,7 @@ EosUdpIn_Win::~EosUdpIn_Win()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpIn_Win::Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIP /*= nullptr*/)
+bool EosUdpIn_Win::Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIntefaceIP /*= nullptr*/)
 {
   if (!IsInitialized())
   {
@@ -63,46 +63,23 @@ bool EosUdpIn_Win::Initialize(EosLog &log, const char *ip, unsigned short port, 
           sockaddr_in addr;
           memset(&addr, 0, sizeof(addr));
           addr.sin_family = AF_INET;
-          addr.sin_addr.S_un.S_addr = inet_addr(ip);
+          addr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
           addr.sin_port = htons(port);
           result = bind(m_Socket, reinterpret_cast<sockaddr *>(&addr), sizeof(addr));
           if (result != SOCKET_ERROR)
           {
-            if (multicastIP)
+            if (multicastIntefaceIP)
             {
               // join multicast group
               ip_mreq imr;
               memset(&imr, 0, sizeof(imr));
-              result = InetPtonA(AF_INET, multicastIP, &imr.imr_multiaddr.s_addr);
-              switch (result)
+              imr.imr_multiaddr.s_addr = inet_addr(ip);
+              imr.imr_interface.s_addr = inet_addr(multicastIntefaceIP);
+              if (setsockopt(m_Socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, reinterpret_cast<const char *>(&imr), sizeof(imr)) == SOCKET_ERROR)
               {
-                case 0:
-                {
-                  char text[256];
-                  sprintf(text, "%s join multicast group invalid ip", GetLogPrefix(m_LogPrefix));
-                  log.AddWarning(text);
-                }
-                break;
-
-                case 1:
-                {
-                  imr.imr_interface.s_addr = INADDR_ANY;
-                  if (setsockopt(m_Socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, reinterpret_cast<const char *>(&imr), sizeof(imr)) == SOCKET_ERROR)
-                  {
-                    char text[256];
-                    sprintf(text, "%s setsockopt(IP_ADD_MEMBERSHIP) failed with error %d", GetLogPrefix(m_LogPrefix), WSAGetLastError());
-                    log.AddWarning(text);
-                  }
-                }
-                break;
-
-                default:
-                {
-                  char text[256];
-                  sprintf(text, "%s join multicast failed with error %d", GetLogPrefix(m_LogPrefix), WSAGetLastError());
-                  log.AddWarning(text);
-                }
-                break;
+                char text[256];
+                sprintf(text, "%s setsockopt(IP_ADD_MEMBERSHIP) failed with error %d", GetLogPrefix(m_LogPrefix), WSAGetLastError());
+                log.AddWarning(text);
               }
             }
 
@@ -238,7 +215,7 @@ EosUdpOut_Win::~EosUdpOut_Win()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpOut_Win::Initialize(EosLog &log, const char *ip, unsigned short port, bool multicast /*= false*/)
+bool EosUdpOut_Win::Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastInterfaceIP /*= nullptr*/)
 {
   if (!IsInitialized())
   {
@@ -266,11 +243,11 @@ bool EosUdpOut_Win::Initialize(EosLog &log, const char *ip, unsigned short port,
           m_Addr.sin_addr.S_un.S_addr = inet_addr(ip);
           m_Addr.sin_port = htons(port);
 
-          if (multicast)
+          if (multicastInterfaceIP)
           {
             in_addr addr;
             memset(&addr, 0, sizeof(addr));
-            addr.s_addr = INADDR_ANY;
+            addr.s_addr = inet_addr(multicastInterfaceIP);
             if (setsockopt(m_Socket, IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char *>(&addr), sizeof(addr)) == SOCKET_ERROR)
             {
               char text[256];

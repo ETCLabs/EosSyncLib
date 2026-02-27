@@ -36,7 +36,7 @@ public:
   EosUdpIn();
   virtual ~EosUdpIn();
 
-  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIP = nullptr) = 0;
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastInterfaceIP = nullptr) = 0;
   virtual bool IsInitialized() const = 0;
   virtual void Shutdown() = 0;
   virtual const char *RecvPacket(EosLog &log, unsigned int timeoutMS, unsigned int retryCount, int &len, void *addr, int *addrSize) = 0;
@@ -58,7 +58,7 @@ public:
   EosUdpOut() {}
   virtual ~EosUdpOut() {}
 
-  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, bool multicast = false) = 0;
+  virtual bool Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastInterfaceIP = nullptr) = 0;
   virtual bool IsInitialized() const = 0;
   virtual void Shutdown() = 0;
   virtual bool SendPacket(EosLog &log, const char *buf, int len) = 0;

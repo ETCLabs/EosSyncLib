@@ -82,7 +82,6 @@ bool EosTcp_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
           log.AddInfo(text);
           m_ConnectState = CONNECT_CONNECTED;
           SetSocketBlocking(log, m_LogPrefix, m_Socket, true);
-          return true;
         }
         else if (errno == EINPROGRESS)
         {
@@ -90,7 +89,6 @@ bool EosTcp_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
           sprintf(text, "%s connecting...", GetLogPrefix(m_LogPrefix));
           log.AddInfo(text);
           m_ConnectState = CONNECT_IN_PROGRESS;
-          return true;
         }
         else
         {
@@ -115,14 +113,14 @@ bool EosTcp_Mac::Initialize(EosLog &log, const char *ip, unsigned short port)
       log.AddError(text);
     }
   }
-  else
-  {
-    char text[256];
-    sprintf(text, "%s initialize failed, already initialized", GetLogPrefix(m_LogPrefix));
-    log.AddWarning(text);
-  }
+  //else
+  //{
+  //  char text[256];
+  //  sprintf(text, "%s initialize failed, already initialized", GetLogPrefix(m_LogPrefix));
+  //  log.AddWarning(text);
+  //}
 
-  return false;
+  return (m_Socket != -1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -40,7 +40,7 @@ EosUdpIn_Mac::~EosUdpIn_Mac()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastIP /*= nullptr*/)
+bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastInterfaceIP /*= nullptr*/)
 {
   if (!IsInitialized())
   {
@@ -62,17 +62,17 @@ bool EosUdpIn_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, 
         sockaddr_in addr;
         memset(&addr, 0, sizeof(addr));
         addr.sin_family = AF_INET;
-        addr.sin_addr.s_addr = inet_addr(ip);
+        addr.sin_addr.s_addr = htonl(INADDR_ANY);
         addr.sin_port = htons(port);
         int result = bind(m_Socket, reinterpret_cast<sockaddr *>(&addr), static_cast<socklen_t>(sizeof(addr)));
         if (result != -1)
         {
-          if (multicastIP)
+          if (multicastInterfaceIP)
           {
             ip_mreq imr;
             memset(&imr, 0, sizeof(imr));
-            imr.imr_multiaddr.s_addr = inet_addr(multicastIP);
-            imr.imr_interface.s_addr = htonl(INADDR_ANY);
+            imr.imr_multiaddr.s_addr = inet_addr(ip);
+            imr.imr_interface.s_addr = inet_addr(multicastInterfaceIP);
             if (setsockopt(m_Socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, reinterpret_cast<const char *>(&imr), sizeof(imr)) == -1)
             {
               char text[256];
@@ -203,7 +203,7 @@ EosUdpOut_Mac::~EosUdpOut_Mac()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, bool multicast /*= false*/)
+bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port, const char *multicastInterfaceIP /*= nullptr*/)
 {
   if (!IsInitialized())
   {
@@ -214,11 +214,11 @@ bool EosUdpOut_Mac::Initialize(EosLog &log, const char *ip, unsigned short port,
       m_Socket = socket(AF_INET, SOCK_DGRAM, 0);
       if (m_Socket != -1)
       {
-        if (multicast)
+        if (multicastInterfaceIP)
         {
           in_addr addr;
           memset(&addr, 0, sizeof(addr));
-          addr.s_addr = INADDR_ANY;
+          addr.s_addr = inet_addr(multicastInterfaceIP);
           if (setsockopt(m_Socket, IPPROTO_IP, IP_MULTICAST_IF, reinterpret_cast<const char *>(&addr), sizeof(addr)) == -1)
           {
             char text[256];
