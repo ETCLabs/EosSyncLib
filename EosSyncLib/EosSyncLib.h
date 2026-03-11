@@ -42,7 +42,7 @@ class EosSyncStatus
 public:
   enum EnumSyncStatus
   {
-    SYNC_STATUS_UNINTIALIZED,
+    SYNC_STATUS_UNINITIALIZED,
     SYNC_STATUS_RUNNING,
     SYNC_STATUS_COMPLETE
   };
