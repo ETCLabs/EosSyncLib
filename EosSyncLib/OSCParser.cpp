@@ -1449,6 +1449,7 @@ void OSCPacketWriter::WriteArg(char *buf, const sArgInfo &info) const
     case OSCArgument::OSC_TYPE_CHAR:
     case OSCArgument::OSC_TYPE_INT32:
     case OSCArgument::OSC_TYPE_MIDI:
+    case OSCArgument::OSC_TYPE_RGBA32:
       memcpy(buf, &info.data.int32Data, 4);
       OSCArgument::Swap32(buf);
       break;
