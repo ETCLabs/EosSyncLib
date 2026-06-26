@@ -315,10 +315,13 @@ const char *EosTcp_Mac::Recv(EosLog &log, unsigned int timeoutMS, size_t &size)
           return m_RecvBuf;
         }
       }
-      else if (result < 0)
+      else
       {
         char text[256];
-        sprintf(text, "%s select failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+        if (result == 0)
+          sprintf(text, "%s peer disconnected", GetLogPrefix(m_LogPrefix));
+        else
+          sprintf(text, "%s select failed with error %d", GetLogPrefix(m_LogPrefix), errno);
         log.AddError(text);
         m_ConnectState = CONNECT_NOT_CONNECTED;
       }
