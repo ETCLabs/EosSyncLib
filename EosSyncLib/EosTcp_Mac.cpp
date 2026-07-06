@@ -302,26 +302,30 @@ const char *EosTcp_Mac::Recv(EosLog &log, unsigned int timeoutMS, size_t &size)
           m_RecvBuf = new char[RECV_BUF_SIZE];
 
         result = recv(m_Socket, m_RecvBuf, RECV_BUF_SIZE, 0);
-        if (result == -1)
+        if (result > 0)
+        {
+          size = static_cast<size_t>(result);
+          return m_RecvBuf;
+        }
+        else if (result == 0)
+        {
+          char text[256];
+          sprintf(text, "%s peer disconnected", GetLogPrefix(m_LogPrefix));
+          log.AddError(text);
+          m_ConnectState = CONNECT_NOT_CONNECTED;
+        }
+        else
         {
           char text[256];
           sprintf(text, "%s recv failed with error %d", GetLogPrefix(m_LogPrefix), errno);
           log.AddError(text);
           m_ConnectState = CONNECT_NOT_CONNECTED;
         }
-        else if (result > 0)
-        {
-          size = static_cast<size_t>(result);
-          return m_RecvBuf;
-        }
       }
-      else
+      else if (result < 0)
       {
         char text[256];
-        if (result == 0)
-          sprintf(text, "%s peer disconnected", GetLogPrefix(m_LogPrefix));
-        else
-          sprintf(text, "%s select failed with error %d", GetLogPrefix(m_LogPrefix), errno);
+        sprintf(text, "%s select failed with error %d", GetLogPrefix(m_LogPrefix), errno);
         log.AddError(text);
         m_ConnectState = CONNECT_NOT_CONNECTED;
       }
