@@ -32,7 +32,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 EosSyncStatus::EosSyncStatus()
-  : m_Value(SYNC_STATUS_UNINTIALIZED)
+  : m_Value(SYNC_STATUS_UNINITIALIZED)
   , m_Dirty(false)
 {
   ResetTimestamp();
@@ -126,7 +126,7 @@ void EosTarget::Recv(EosLog &log, EosOsc::sCommand &command, const sPathData &pa
 {
   switch (m_Status.GetValue())
   {
-    case EosSyncStatus::SYNC_STATUS_UNINTIALIZED:
+    case EosSyncStatus::SYNC_STATUS_UNINITIALIZED:
       m_Status.SetValue(EosSyncStatus::SYNC_STATUS_RUNNING);
       // intentional fall-through
 
@@ -622,8 +622,8 @@ void EosTargetList::Clear()
   m_NumTargets = 0;
   m_UIDLookup.clear();
   m_InitialSync = sInitialSyncInfo();
-  m_Status.SetValue(EosSyncStatus::SYNC_STATUS_UNINTIALIZED);
-  m_StatusInternal.SetValue(EosSyncStatus::SYNC_STATUS_UNINTIALIZED);
+  m_Status.SetValue(EosSyncStatus::SYNC_STATUS_UNINITIALIZED);
+  m_StatusInternal.SetValue(EosSyncStatus::SYNC_STATUS_UNINITIALIZED);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -632,7 +632,7 @@ void EosTargetList::Tick(EosTcp &tcp, EosOsc &osc)
 {
   switch (m_StatusInternal.GetValue())
   {
-    case EosSyncStatus::SYNC_STATUS_UNINTIALIZED:
+    case EosSyncStatus::SYNC_STATUS_UNINITIALIZED:
     {
       std::string path("/eos/get/");
       path.append(EosTarget::GetNameForTargetType(m_Type));
@@ -1172,7 +1172,7 @@ void EosSyncData::Clear()
       delete j->second;
   }
   m_ShowData.clear();
-  m_Status.SetValue(EosSyncStatus::SYNC_STATUS_UNINTIALIZED);
+  m_Status.SetValue(EosSyncStatus::SYNC_STATUS_UNINITIALIZED);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1377,7 +1377,7 @@ void EosSyncData::RecvCmd(EosTcp &tcp, EosOsc &osc, EosLog &log, EosOsc::sComman
       log.AddInfo(text);
     }
   }
-  else if (m_Status.GetValue() != EosSyncStatus::SYNC_STATUS_UNINTIALIZED)
+  else if (m_Status.GetValue() != EosSyncStatus::SYNC_STATUS_UNINITIALIZED)
   {
     // is it a notification about show data changes?
     static const std::string sNotify("/eos/out/notify/");
@@ -1510,7 +1510,7 @@ void EosSyncData::Tick(EosTcp &tcp, EosOsc &osc, EosLog &log)
 {
   switch (m_Status.GetValue())
   {
-    case EosSyncStatus::SYNC_STATUS_UNINTIALIZED: Initialize(); break;
+    case EosSyncStatus::SYNC_STATUS_UNINITIALIZED: Initialize(); break;
 
     case EosSyncStatus::SYNC_STATUS_RUNNING: TickRunning(tcp, osc, log); break;
   }
@@ -1538,7 +1538,7 @@ void EosSyncData::ClearDirty()
 void EosSyncData::SetSubscribedTypes(const EosTarget::TYPE_LIST &list)
 {
   Clear();
-  m_Status.SetValue(EosSyncStatus::EnumSyncStatus::SYNC_STATUS_UNINTIALIZED);
+  m_Status.SetValue(EosSyncStatus::EnumSyncStatus::SYNC_STATUS_UNINITIALIZED);
   m_Types = list;
 }
 
